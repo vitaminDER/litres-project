@@ -1,5 +1,6 @@
 package com.example.springcourse.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -33,8 +34,8 @@ public class Person {
     @Column(name = "email")
     private String email;
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    @JsonBackReference
     List<Book> books;
 
 
