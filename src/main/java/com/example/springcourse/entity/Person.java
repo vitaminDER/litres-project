@@ -1,22 +1,24 @@
 package com.example.springcourse.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.lang.model.element.Name;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
-@Table(name = "Person")
+@Table(name = "person")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private int id;
 
     @Column(name = "first_name")
@@ -31,7 +33,11 @@ public class Person {
     @Column(name = "email")
     private String email;
 
-    @OneToMany(mappedBy = "owner")
-    private List<Book> books;
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    List<Book> books;
+
 
 }
+
+
