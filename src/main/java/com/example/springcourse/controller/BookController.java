@@ -1,32 +1,61 @@
 package com.example.springcourse.controller;
 
+import com.example.springcourse.dto.BookDTO;
 import com.example.springcourse.entity.Book;
-import com.example.springcourse.service.EntityService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.springcourse.entity.Person;
+import com.example.springcourse.repository.BookRepository;
+import com.example.springcourse.repository.PersonRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequiredArgsConstructor
+@AllArgsConstructor
 @RequestMapping("/books")
 public class BookController {
 
-    @Autowired
-    private EntityService entityService;
+    private final BookRepository bookRepository;
+    private final PersonRepository personRepository;
 
-
-
-    @GetMapping("/b")
-    public ResponseEntity<List<Book>> findAllBooks() {
-        return ResponseEntity.ok(entityService.findAllBook());
+    @GetMapping("/{id}")
+    public List<Book> findBookById(@PathVariable Integer id) {
+        List<Book> books = bookRepository.findBookById(id);
+        return books;
     }
 
+    @GetMapping("/person/{person_id}")
+    public ResponseEntity<List<Book>> findBookByPersonId(@PathVariable Integer person_id) {
+        List<Book> books = bookRepository.findBookByPersonId(person_id);
+        if (books.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(books);
+    }
 
+    @GetMapping("/year/{year}")
+    public List<Book> findBookByYear(@PathVariable Integer year) {
+        List<Book> books = bookRepository.findBookByYear(year);
+
+        return books;
+    }
+
+    @PostMapping("/newBook")
+    public Book addNewBook(@RequestBody BookDTO bookDTO) {
+
+        Person person = personRepository.findPersonById(bookDTO.getOwnerId());
+
+        Book theBook = new Book();
+        theBook.setTitle(bookDTO.getTitle());
+        theBook.setAuthor(bookDTO.getAuthor());
+        theBook.setYear(bookDTO.getYear());
+        theBook.setOwner(person);
+
+        return bookRepository.save(theBook);
+
+    }
 
 }
