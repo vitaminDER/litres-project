@@ -18,7 +18,6 @@ public interface BookRepository extends CrudRepository<Book, Integer> {
     @Query("select book from Book book join fetch book.owner where book.owner.id = :person_id")
     List<Book> findBookByPersonId(@Param("person_id")Integer person_id);
 
-<<<<<<< HEAD
     @Query("select bk from Book bk where bk.year = :year")
     List<Book> findBookByYear(int year);
 

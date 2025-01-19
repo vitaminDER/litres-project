@@ -17,7 +17,6 @@ public class PersonController {
 
     private final PersonService personService;
 
-
     private final PersonRepository personRepository;
 
     @PostMapping("/add")

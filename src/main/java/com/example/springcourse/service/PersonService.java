@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package com.example.springcourse.service;
 
 import com.example.springcourse.dto.PersonDTO;
