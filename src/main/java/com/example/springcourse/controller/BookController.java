@@ -44,7 +44,7 @@ public class BookController {
     }
 
     @PostMapping("/newBook")
-    public Book addNewBook(@RequestBody BookDTO bookDTO) {
+    public Book addNewBookByPersonId(@RequestBody BookDTO bookDTO) {
 
         Person person = personRepository.findPersonById(bookDTO.getOwnerId());
 
@@ -57,5 +57,7 @@ public class BookController {
         return bookRepository.save(theBook);
 
     }
+
+
 
 }

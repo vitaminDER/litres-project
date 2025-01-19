@@ -1,20 +1,20 @@
 package com.example.springcourse.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "book")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "book")
 public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private int id;
 
     @Column(name = "title")
@@ -24,10 +24,11 @@ public class Book {
     private String author;
 
     @Column(name = "year")
-    private String year;
+    private int year;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonManagedReference
     @JoinColumn(name = "person_id", referencedColumnName = "id")
-    private Person owner;
-}
+    Person owner;
 
+}
