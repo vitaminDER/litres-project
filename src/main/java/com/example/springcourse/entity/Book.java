@@ -30,5 +30,4 @@ public class Book {
     @JsonManagedReference
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     Person owner;
-
 }

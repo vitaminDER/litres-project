@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package com.example.springcourse.service;
 
 import com.example.springcourse.dto.PersonDTO;
@@ -8,9 +9,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class PersonService{
+public class PersonService {
 
-//    private final String SQL_INSERT_PERSON = ("insert into Person (first_name, last_name, age, email) values (:first_name, :last_name, :age, :email)");
 
     private final PersonRepository personRepository;
 
@@ -24,6 +24,6 @@ public class PersonService{
 
         return personRepository.save(person);
     }
-
-
 }
+
+

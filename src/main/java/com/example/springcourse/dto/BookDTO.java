@@ -1,3 +1,4 @@
+
 package com.example.springcourse.dto;
 
 import lombok.Getter;
@@ -14,4 +15,5 @@ public class BookDTO {
     private int year;
 
     private Integer ownerId;
+package com.example.springcourse.dto;public class BookDTO {
 }

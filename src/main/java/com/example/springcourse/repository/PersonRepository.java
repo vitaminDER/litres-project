@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package com.example.springcourse.repository;
 
 import com.example.springcourse.entity.Book;
@@ -17,4 +18,3 @@ public interface PersonRepository extends CrudRepository<Person, Integer> {
     Person findPersonById(Integer id);
 
 }
-
