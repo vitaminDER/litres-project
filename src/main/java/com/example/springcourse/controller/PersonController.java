@@ -22,13 +22,6 @@ public class PersonController {
     @PostMapping("/add")
     public ResponseEntity<Person> addNewPerson(@Valid @RequestBody PersonDTO personDTO) {
 
-        if (personDTO == null) {
-            throw new IllegalArgumentException("PersonDTO can't be NULL!");
-        }
-        if (personDTO.getAge() < 0) {
-            throw new IllegalArgumentException("Person age can't be less 0");
-        }
-
         Person savedPerson = personService.savePerson(personDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPerson);
