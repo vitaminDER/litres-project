@@ -10,10 +10,8 @@ import lombok.Setter;
 @Setter
 public class PersonDTO {
 
-    @NotBlank(message = "First name is required")
      String firstName;
 
-    @NotBlank(message = "First name is required")
      String lastName;
 
     @Min(value = 0)

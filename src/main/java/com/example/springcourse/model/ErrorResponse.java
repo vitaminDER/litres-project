@@ -1,2 +1,11 @@
-package com.example.springcourse.model;public class ErrorResponse {
+package com.example.springcourse.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class ErrorResponse {
+
+    private String message;
 }

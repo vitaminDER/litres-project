@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,10 +13,11 @@ import javax.lang.model.element.Name;
 import java.util.List;
 
 @Entity
-@Table(name = "person")
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "person")
 public class Person {
 
     @Id
