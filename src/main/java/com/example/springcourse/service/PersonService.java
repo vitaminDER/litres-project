@@ -35,10 +35,9 @@ public class PersonService {
         return convertToPersonDTO(savedPerson);
     }
 
-//    PersonDTO convertToPersonDTO(Person person) {
-//        return modelMapper.map(person, PersonDTO.class);
-//    }
-
+    PersonDTO convertToPersonDTO(Person person) {
+        return modelMapper.map(person, PersonDTO.class);
+    }
 
 }
 

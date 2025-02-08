@@ -34,12 +34,12 @@ public class PersonController {
     @GetMapping("/find/{id}")
     public ResponseEntity<Person> findPersonById(@PathVariable Integer id) {
 
-         Person person =  personRepository.findPersonById(id);
+        Person person = personRepository.findPersonById(id);
 
-         if(person == null) {
-             log.info("Person can't be null");
-             throw new PersonNotFoundException("Person with ID " + id + " not found!");
-         }
+        if (person == null) {
+            log.info("Person can't be null");
+            throw new PersonNotFoundException("Person with ID " + id + " not found!");
+        }
 
         return ResponseEntity.status(HttpStatus.OK).body(person);
     }
