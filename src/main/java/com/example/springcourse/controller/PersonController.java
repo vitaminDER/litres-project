@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class PersonController {
     private final PersonRepository personRepository;
 
 
-    @PostMapping("/add")
+    @PostMapping()
     public ResponseEntity<PersonDTO> addNewPerson(@RequestBody @Valid PersonDTO personDTO) {
 
         PersonDTO savedPerson = personService.savePerson(personDTO);
@@ -31,7 +33,7 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPerson);
     }
 
-    @GetMapping("/find/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<Person> findPersonById(@PathVariable Integer id) {
 
         Person person = personRepository.findPersonById(id);
@@ -42,5 +44,23 @@ public class PersonController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(person);
+    }
+
+    @GetMapping()
+    public List<Person> findAllPerson(Person person) {
+
+        return personService.showAllPerson(person);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<PersonDTO> updatePersonById(@PathVariable Integer id, @RequestBody PersonDTO personDTO) {
+        PersonDTO updatedPersonDTO = personService.updatePerson(id, personDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedPersonDTO);
+                
+    }
+
+    @DeleteMapping("{id}")
+    public void deletePersonById(@PathVariable Integer id) {
+        this.personService.deletePerson(id);
     }
 }
