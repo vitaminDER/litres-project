@@ -1,6 +1,7 @@
 package com.example.springcourse.service;
 
-import com.example.springcourse.dto.PersonDTO;
+import com.example.springcourse.dto.person.PersonDTO;
+import com.example.springcourse.dto.person.PersonReviewDTO;
 import com.example.springcourse.entity.Person;
 import com.example.springcourse.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +57,18 @@ public class PersonService {
 
     public void deletePerson(Integer id) {
         this.personRepository.deleteById(id);
+    }
+
+    public PersonReviewDTO getUserName(Integer id) {
+        Person person = personRepository.findPersonById(id);
+        PersonReviewDTO personReviewDTO = modelMapper.map(person, PersonReviewDTO.class);
+        return personReviewDTO;
+    }
+
+    public PersonDTO getPersonDTO(Integer id) {
+        Person person = personRepository.findPersonById(id);
+        PersonDTO personDTO = modelMapper.map(person, PersonDTO.class);
+        return personDTO;
     }
 
     PersonDTO convertToPersonDTO(Person person) {

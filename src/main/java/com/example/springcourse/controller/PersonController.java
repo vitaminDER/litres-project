@@ -1,6 +1,7 @@
 package com.example.springcourse.controller;
 
-import com.example.springcourse.dto.PersonDTO;
+import com.example.springcourse.dto.person.PersonDTO;
+import com.example.springcourse.dto.person.PersonReviewDTO;
 import com.example.springcourse.entity.Person;
 import com.example.springcourse.exception.PersonNotFoundException;
 import com.example.springcourse.repository.PersonRepository;
@@ -21,34 +22,37 @@ import java.util.List;
 public class PersonController {
 
     private final PersonService personService;
-
     private final PersonRepository personRepository;
 
 
     @PostMapping()
     public ResponseEntity<PersonDTO> addNewPerson(@RequestBody @Valid PersonDTO personDTO) {
-
         PersonDTO savedPerson = personService.savePerson(personDTO);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPerson);
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<Person> findPersonById(@PathVariable Integer id) {
-
-        Person person = personRepository.findPersonById(id);
-
-        if (person == null) {
+    @GetMapping("/info/{id}")
+    public ResponseEntity<PersonDTO> findPersonInfoById(@PathVariable Integer id) {
+        PersonDTO personDTO = personService.getPersonDTO(id);
+        if (personDTO == null) {
             log.info("Person can't be null");
             throw new PersonNotFoundException("Person with ID " + id + " not found!");
         }
+        return ResponseEntity.status(HttpStatus.OK).body(personDTO);
+    }
 
-        return ResponseEntity.status(HttpStatus.OK).body(person);
+    @GetMapping("/review/{id}")
+    public ResponseEntity<PersonReviewDTO> findUserById(@PathVariable Integer id) {
+        PersonReviewDTO personReviewDTO = personService.getUserName(id);
+        if (personReviewDTO == null) {
+            log.info("User can't be null");
+            throw new PersonNotFoundException("User with ID " + id + " not found!");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(personReviewDTO);
     }
 
     @GetMapping()
     public List<Person> findAllPerson(Person person) {
-
         return personService.showAllPerson(person);
     }
 
@@ -56,7 +60,7 @@ public class PersonController {
     public ResponseEntity<PersonDTO> updatePersonById(@PathVariable Integer id, @RequestBody PersonDTO personDTO) {
         PersonDTO updatedPersonDTO = personService.updatePerson(id, personDTO);
         return ResponseEntity.status(HttpStatus.OK).body(updatedPersonDTO);
-                
+
     }
 
     @DeleteMapping("{id}")

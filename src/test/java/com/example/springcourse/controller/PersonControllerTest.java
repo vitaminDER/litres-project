@@ -1,5 +1,6 @@
 package com.example.springcourse.controller;
 
+import com.example.springcourse.dto.person.PersonDTO;
 import com.example.springcourse.entity.Person;
 import com.example.springcourse.repository.PersonRepository;
 import com.example.springcourse.service.PersonService;
@@ -44,7 +45,7 @@ class PersonControllerTest {
 
         when(personRepository.findPersonById(id)).thenReturn(person);
 
-        ResponseEntity<Person> response = personController.findPersonById(id);
+        ResponseEntity<PersonDTO> response = personController.findPersonInfoById(id);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());

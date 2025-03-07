@@ -36,9 +36,13 @@ public class Person {
     @Column(name = "email")
     private String email;
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
-    @JsonBackReference
-    List<Book> books;
+    @Column(name = "user_name")
+    private String userName;
+
+
+    @OneToMany(mappedBy = "person", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    List<Review> review;
 
 
 }
