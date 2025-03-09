@@ -1,8 +1,7 @@
 package com.example.springcourse.controller;
 
-import com.example.springcourse.dto.BookDTO;
+import com.example.springcourse.dto.book.BookDTO;
 import com.example.springcourse.entity.Book;
-import com.example.springcourse.entity.Person;
 import com.example.springcourse.repository.BookRepository;
 import com.example.springcourse.repository.PersonRepository;
 import com.example.springcourse.service.BookService;
@@ -11,7 +10,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -19,13 +17,14 @@ import java.util.List;
 public class BookController {
 
     private final BookService bookService;
-    private final BookRepository bookRepository;
-    private final PersonRepository personRepository;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Book> findBookById(@PathVariable Integer id) {
-        Book findBook = bookRepository.findBookById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(findBook);
+    @GetMapping("/info/{id}")
+    public ResponseEntity<BookDTO> findBookById(@PathVariable Integer id) {
+        BookDTO bookDTO = bookService.getBookInfoById(id);
+        if(bookDTO == null) {
+            throw new RuntimeException("BookDTO can't be null");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(bookDTO);
     }
 
     @PutMapping("/{id}")

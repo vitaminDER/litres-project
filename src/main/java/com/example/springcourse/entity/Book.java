@@ -34,8 +34,7 @@ public class Book {
 
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "book_genre",
+    @JoinTable(name = "book_genre",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
     List<Genre> genre;
@@ -49,6 +48,10 @@ public class Book {
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
     @JsonManagedReference
     List<Review> review;
+
+    @ManyToMany(mappedBy = "favouriteBooks", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    List<Person> person;
 
 
 

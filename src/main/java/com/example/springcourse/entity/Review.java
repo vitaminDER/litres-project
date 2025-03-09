@@ -3,6 +3,8 @@ package com.example.springcourse.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,15 +28,17 @@ public class Review {
     @Column(name = "comment")
     private String comment;
 
-    @Column(name = "rating")
-    private BigDecimal rating;
+    @Column(name = "evaluation")
+    @Min(value = 0)
+    @Max(value = 5)
+    private int evaluation;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     @JsonBackReference
     Person person;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "book_id", referencedColumnName = "id")
     @JsonBackReference
     Book book;

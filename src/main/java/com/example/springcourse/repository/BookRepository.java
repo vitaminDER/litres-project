@@ -1,11 +1,10 @@
 package com.example.springcourse.repository;
 
-import com.example.springcourse.dto.BookDTO;
+import com.example.springcourse.dto.book.BookDTO;
 import com.example.springcourse.entity.Book;
 import org.springframework.data.jpa.repository.NativeQuery;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

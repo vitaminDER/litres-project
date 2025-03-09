@@ -1,13 +1,14 @@
 package com.example.springcourse.service;
 
-import com.example.springcourse.dto.BookDTO;
+import com.example.springcourse.dto.book.BookDTO;
 import com.example.springcourse.entity.Book;
 import com.example.springcourse.repository.BookRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +44,12 @@ public class BookService {
 
       return convertToBookDTO(updatedBook);
    }
+
+   public BookDTO getBookInfoById(Integer id) {
+      Book book = bookRepository.findBookById(id);
+      return modelMapper.map(book, BookDTO.class);
+   }
+
 
    public void deleteBook (Integer id) {
       this.bookRepository.deleteById(id);

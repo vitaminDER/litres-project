@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,6 +32,7 @@ public class Person {
     private String lastName;
 
     @Column(name = "age")
+    @Min(value = 0)
     private int age;
 
     @Column(name = "email")
@@ -44,6 +46,11 @@ public class Person {
     @JsonManagedReference
     List<Review> review;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "favourite_book",
+            joinColumns = @JoinColumn(name = "person_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id"))
+    List<Book> favouriteBooks;
 
 }
 

@@ -1,7 +1,9 @@
-package com.example.springcourse.dto;
+package com.example.springcourse.dto.book;
 
+import com.example.springcourse.dto.person.PersonReviewDTO;
 import com.example.springcourse.entity.Author;
 import com.example.springcourse.entity.Genre;
+import com.example.springcourse.entity.Review;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -23,12 +25,10 @@ public class BookDTO {
     @Min(value = 0)
     private int year;
 
-    private int personId;
-
     private String description;
 
-    private String genre;
+    private List<Genre> genres;
 
-    List<Author> authorBook;
+    private List<PersonReviewDTO> reviews;
 
 }

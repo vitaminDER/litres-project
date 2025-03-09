@@ -1,6 +1,7 @@
 package com.example.springcourse.service;
 
 import com.example.springcourse.dto.person.PersonDTO;
+import com.example.springcourse.dto.person.PersonFavouriteBooksDTO;
 import com.example.springcourse.dto.person.PersonReviewDTO;
 import com.example.springcourse.entity.Person;
 import com.example.springcourse.repository.PersonRepository;
@@ -59,16 +60,19 @@ public class PersonService {
         this.personRepository.deleteById(id);
     }
 
-    public PersonReviewDTO getUserName(Integer id) {
+    public PersonReviewDTO getReviewPerson(Integer id) {
         Person person = personRepository.findPersonById(id);
-        PersonReviewDTO personReviewDTO = modelMapper.map(person, PersonReviewDTO.class);
-        return personReviewDTO;
+        return modelMapper.map(person, PersonReviewDTO.class);
     }
 
-    public PersonDTO getPersonDTO(Integer id) {
+    public PersonDTO getPersonInfoDTO(Integer id) {
         Person person = personRepository.findPersonById(id);
-        PersonDTO personDTO = modelMapper.map(person, PersonDTO.class);
-        return personDTO;
+        return modelMapper.map(person, PersonDTO.class);
+    }
+
+    public PersonFavouriteBooksDTO getPersonFavouriteBooks(Integer id) {
+        Person person = personRepository.findPersonById(id);
+        return modelMapper.map(person, PersonFavouriteBooksDTO.class);
     }
 
     PersonDTO convertToPersonDTO(Person person) {

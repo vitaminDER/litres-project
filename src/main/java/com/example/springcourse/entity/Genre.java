@@ -21,7 +21,7 @@ public class Genre {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "genre")
+    @ManyToMany(mappedBy = "genre", fetch = FetchType.EAGER)
     @JsonBackReference
     List<Book> booksGenres;
 

@@ -1,6 +1,7 @@
 package com.example.springcourse.controller;
 
 import com.example.springcourse.dto.person.PersonDTO;
+import com.example.springcourse.dto.person.PersonFavouriteBooksDTO;
 import com.example.springcourse.dto.person.PersonReviewDTO;
 import com.example.springcourse.entity.Person;
 import com.example.springcourse.exception.PersonNotFoundException;
@@ -22,7 +23,6 @@ import java.util.List;
 public class PersonController {
 
     private final PersonService personService;
-    private final PersonRepository personRepository;
 
 
     @PostMapping()
@@ -33,7 +33,7 @@ public class PersonController {
 
     @GetMapping("/info/{id}")
     public ResponseEntity<PersonDTO> findPersonInfoById(@PathVariable Integer id) {
-        PersonDTO personDTO = personService.getPersonDTO(id);
+        PersonDTO personDTO = personService.getPersonInfoDTO(id);
         if (personDTO == null) {
             log.info("Person can't be null");
             throw new PersonNotFoundException("Person with ID " + id + " not found!");
@@ -42,13 +42,23 @@ public class PersonController {
     }
 
     @GetMapping("/review/{id}")
-    public ResponseEntity<PersonReviewDTO> findUserById(@PathVariable Integer id) {
-        PersonReviewDTO personReviewDTO = personService.getUserName(id);
+    public ResponseEntity<PersonReviewDTO> findPersonReviewById(@PathVariable Integer id) {
+        PersonReviewDTO personReviewDTO = personService.getReviewPerson(id);
         if (personReviewDTO == null) {
             log.info("User can't be null");
             throw new PersonNotFoundException("User with ID " + id + " not found!");
         }
         return ResponseEntity.status(HttpStatus.OK).body(personReviewDTO);
+    }
+
+    @GetMapping("/favouriteBooks/{id}")
+    public ResponseEntity<PersonFavouriteBooksDTO> findFavouriteBooksPerson(@PathVariable Integer id) {
+        PersonFavouriteBooksDTO personFavouriteBooksDTO = personService.getPersonFavouriteBooks(id);
+        if (personFavouriteBooksDTO == null) {
+            log.info("User can't be null");
+            throw new PersonNotFoundException("User with ID " + id + " not found!");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(personFavouriteBooksDTO);
     }
 
     @GetMapping()
