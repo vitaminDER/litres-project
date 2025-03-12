@@ -7,12 +7,13 @@ import com.example.springcourse.repository.PersonRepository;
 import com.example.springcourse.service.BookService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/api/book")
 public class BookController {
 
@@ -57,9 +58,6 @@ public class BookController {
     @PostMapping()
     public ResponseEntity<BookDTO> addNewBook(@RequestBody @Valid BookDTO bookDTO) {
         BookDTO savedBookDTO = bookService.saveBook(bookDTO);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(savedBookDTO);
-
-
     }
 }

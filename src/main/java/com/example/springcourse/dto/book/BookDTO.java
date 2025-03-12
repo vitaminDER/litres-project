@@ -31,6 +31,4 @@ public class BookDTO {
 
     private List<PersonReviewDTO> reviews;
 
-    private String abracadabra;
-
 }
