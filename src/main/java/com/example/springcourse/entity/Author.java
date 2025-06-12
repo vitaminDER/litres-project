@@ -27,7 +27,7 @@ public class Author {
     @Column(name = "biography")
     private String biography;
 
-    @OneToMany(mappedBy = "authorBooks", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "authorBooks")
     @JsonManagedReference
     List<Book> booksAuthor;
 

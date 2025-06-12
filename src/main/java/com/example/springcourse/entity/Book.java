@@ -1,13 +1,18 @@
 package com.example.springcourse.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "book")
@@ -32,8 +37,11 @@ public class Book {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "rating")
+    private BigDecimal rating;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "book_genre",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
@@ -45,14 +53,13 @@ public class Book {
     @JsonBackReference
     Author authorBooks;
 
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "book",fetch = FetchType.LAZY)
     @JsonManagedReference
     List<Review> review;
 
-    @ManyToMany(mappedBy = "favouriteBooks", fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @ManyToMany(mappedBy = "favouriteBooks", fetch = FetchType.LAZY)
+    @JsonIgnore
     List<Person> person;
-
 
 
 }

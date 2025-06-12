@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BookFavouriteDTO {
+public class BookFavouriteDto {
 
    private String title;
    private String author;

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import javax.lang.model.element.Name;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Builder
@@ -42,11 +43,11 @@ public class Person {
     private String userName;
 
 
-    @OneToMany(mappedBy = "person", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
     @JsonManagedReference
     List<Review> review;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "favourite_book",
             joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "book_id"))

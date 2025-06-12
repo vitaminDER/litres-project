@@ -1,8 +1,8 @@
 package com.example.springcourse.service;
 
-import com.example.springcourse.dto.person.PersonDTO;
-import com.example.springcourse.dto.person.PersonFavouriteBooksDTO;
-import com.example.springcourse.dto.person.PersonReviewDTO;
+import com.example.springcourse.dto.person.PersonDto;
+import com.example.springcourse.dto.person.PersonFavouriteBooksDto;
+import com.example.springcourse.dto.review.ReviewBook;
 import com.example.springcourse.entity.Person;
 import com.example.springcourse.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,35 +20,34 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final ModelMapper modelMapper;
 
-    public PersonDTO savePerson(PersonDTO personDTO) {
+    public PersonDto savePerson(PersonDto personDto) {
 
-        if (personDTO == null) {
+        if (personDto == null) {
             log.info("Attempt to save null person");
             throw new IllegalArgumentException("Person can't be NULL!");
         }
-        if (personDTO.getAge() < 0) {
-            log.info("Attempt to save person with negative age: {}", personDTO.getAge());
+        if (personDto.getAge() < 0) {
+            log.info("Attempt to save person with negative age: {}", personDto.getAge());
             throw new IllegalArgumentException("Person age can't be less 0");
         }
 
-        Person person = modelMapper.map(personDTO, Person.class);
+        Person person = modelMapper.map(personDto, Person.class);
         Person savedPerson = personRepository.save(person);
         log.info("Person saved successfully with ID: {}", savedPerson.getId());
 
-        return convertToPersonDTO(savedPerson);
+        return toDto(savedPerson);
     }
 
-    public PersonDTO updatePerson(Integer id, PersonDTO personDTO) {
+    public PersonDto updatePerson(Integer id, PersonDto personDto) {
 
         Person person = personRepository.findPersonById(id);
         if (person == null) {
             throw new RuntimeException("Person not found with id: " + id);
         }
 
-        modelMapper.map(personDTO, person);
+        modelMapper.map(personDto, person);
         Person updatedPerson = personRepository.save(person);
-
-        return modelMapper.map(updatedPerson, PersonDTO.class);
+        return modelMapper.map(updatedPerson, PersonDto.class);
     }
 
     public List<Person> showAllPerson(Person person) {
@@ -60,27 +59,27 @@ public class PersonService {
         this.personRepository.deleteById(id);
     }
 
-    public PersonReviewDTO getReviewPerson(Integer id) {
+    public ReviewBook getReviewPerson(Integer id) {
+        Person person = personRepository.findPersonReviewById(id);
+        return modelMapper.map(person, ReviewBook.class);
+    }
+
+    public PersonDto getPersonInfo(Integer id) {
         Person person = personRepository.findPersonById(id);
-        return modelMapper.map(person, PersonReviewDTO.class);
+        return toDto(person);
     }
 
-    public PersonDTO getPersonInfoDTO(Integer id) {
-        Person person = personRepository.findPersonById(id);
-        return modelMapper.map(person, PersonDTO.class);
+    public PersonFavouriteBooksDto getPersonFavouriteBooks(Integer id) {
+        Person person = personRepository.findPersonFavouriteBooks(id);
+        return modelMapper.map(person, PersonFavouriteBooksDto.class);
     }
 
-    public PersonFavouriteBooksDTO getPersonFavouriteBooks(Integer id) {
-        Person person = personRepository.findPersonById(id);
-        return modelMapper.map(person, PersonFavouriteBooksDTO.class);
+    PersonDto toDto(Person person) {
+        return modelMapper.map(person, PersonDto.class);
     }
 
-    PersonDTO convertToPersonDTO(Person person) {
-        return modelMapper.map(person, PersonDTO.class);
-    }
-
-    Person convertToPerson(PersonDTO personDTO) {
-        return modelMapper.map(personDTO, Person.class);
+    Person toEntity(PersonDto personDto) {
+        return modelMapper.map(personDto, Person.class);
     }
 
 }

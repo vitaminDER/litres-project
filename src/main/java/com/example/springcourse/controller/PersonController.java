@@ -1,11 +1,10 @@
 package com.example.springcourse.controller;
 
-import com.example.springcourse.dto.person.PersonDTO;
-import com.example.springcourse.dto.person.PersonFavouriteBooksDTO;
-import com.example.springcourse.dto.person.PersonReviewDTO;
+import com.example.springcourse.dto.person.PersonDto;
+import com.example.springcourse.dto.person.PersonFavouriteBooksDto;
+import com.example.springcourse.dto.review.ReviewBook;
 import com.example.springcourse.entity.Person;
 import com.example.springcourse.exception.PersonNotFoundException;
-import com.example.springcourse.repository.PersonRepository;
 import com.example.springcourse.service.PersonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,39 +25,39 @@ public class PersonController {
 
 
     @PostMapping()
-    public ResponseEntity<PersonDTO> addNewPerson(@RequestBody @Valid PersonDTO personDTO) {
-        PersonDTO savedPerson = personService.savePerson(personDTO);
+    public ResponseEntity<PersonDto> createPerson(@RequestBody @Valid PersonDto personDto) {
+        PersonDto savedPerson = personService.savePerson(personDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPerson);
     }
 
     @GetMapping("/info/{id}")
-    public ResponseEntity<PersonDTO> findPersonInfoById(@PathVariable Integer id) {
-        PersonDTO personDTO = personService.getPersonInfoDTO(id);
-        if (personDTO == null) {
+    public ResponseEntity<PersonDto> findPersonInfo(@PathVariable Integer id) {
+        PersonDto personDto = personService.getPersonInfo(id);
+        if (personDto == null) {
             log.info("Person can't be null");
             throw new PersonNotFoundException("Person with ID " + id + " not found!");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(personDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(personDto);
     }
 
     @GetMapping("/review/{id}")
-    public ResponseEntity<PersonReviewDTO> findPersonReviewById(@PathVariable Integer id) {
-        PersonReviewDTO personReviewDTO = personService.getReviewPerson(id);
-        if (personReviewDTO == null) {
+    public ResponseEntity<ReviewBook> findPersonReview(@PathVariable Integer id) {
+        ReviewBook reviewBookDto = personService.getReviewPerson(id);
+        if (reviewBookDto == null) {
             log.info("User can't be null");
             throw new PersonNotFoundException("User with ID " + id + " not found!");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(personReviewDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(reviewBookDto);
     }
 
     @GetMapping("/favouriteBooks/{id}")
-    public ResponseEntity<PersonFavouriteBooksDTO> findFavouriteBooksPerson(@PathVariable Integer id) {
-        PersonFavouriteBooksDTO personFavouriteBooksDTO = personService.getPersonFavouriteBooks(id);
-        if (personFavouriteBooksDTO == null) {
+    public ResponseEntity<PersonFavouriteBooksDto> findFavouriteBooksPerson(@PathVariable Integer id) {
+        PersonFavouriteBooksDto personFavouriteBooksDto = personService.getPersonFavouriteBooks(id);
+        if (personFavouriteBooksDto == null) {
             log.info("User can't be null");
             throw new PersonNotFoundException("User with ID " + id + " not found!");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(personFavouriteBooksDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(personFavouriteBooksDto);
     }
 
     @GetMapping()
@@ -67,14 +66,14 @@ public class PersonController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<PersonDTO> updatePersonById(@PathVariable Integer id, @RequestBody PersonDTO personDTO) {
-        PersonDTO updatedPersonDTO = personService.updatePerson(id, personDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(updatedPersonDTO);
+    public ResponseEntity<PersonDto> updatePerson(@PathVariable Integer id, @RequestBody PersonDto personDto) {
+        PersonDto updatedPersonDto = personService.updatePerson(id, personDto);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedPersonDto);
 
     }
 
     @DeleteMapping("{id}")
-    public void deletePersonById(@PathVariable Integer id) {
+    public void deletePerson(@PathVariable Integer id) {
         this.personService.deletePerson(id);
     }
 }
