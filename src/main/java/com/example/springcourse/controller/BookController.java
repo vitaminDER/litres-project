@@ -1,9 +1,11 @@
 package com.example.springcourse.controller;
 
+import com.example.springcourse.dto.book.BookCreateDto;
 import com.example.springcourse.dto.book.BookDto;
 import com.example.springcourse.dto.review.ReviewBook;
 import com.example.springcourse.dto.review.ReviewRequest;
 import com.example.springcourse.dto.review.ReviewResponse;
+import com.example.springcourse.entity.Book;
 import com.example.springcourse.exception.PersonNotFoundException;
 import com.example.springcourse.service.BookService;
 import jakarta.validation.Valid;
@@ -40,11 +42,12 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BookDto> updateBook(@PathVariable Integer id, BookDto bookDTO) {
-        BookDto updatedBookDto = bookService.updateBook(id, bookDTO);
+    public ResponseEntity<BookCreateDto> updateBook(@PathVariable Integer id, @RequestBody BookCreateDto bookCreateDto) {
+        BookCreateDto updatedBookDto = bookService.updateBook(id, bookCreateDto);
         return ResponseEntity.status(HttpStatus.OK).body(updatedBookDto);
     }
 
+    @CrossOrigin
     @DeleteMapping("/{id}")
     public void deleteBook(@PathVariable Integer id) {
         this.bookService.deleteBook(id);
@@ -52,9 +55,15 @@ public class BookController {
 
 
     @PostMapping()
-    public ResponseEntity<BookDto> createBook(@RequestBody @Valid BookDto bookDTO) {
-        BookDto savedBookDto = bookService.saveBook(bookDTO);
+    public ResponseEntity<BookCreateDto> createBook(@RequestBody @Valid BookDto bookDTO) {
+        BookCreateDto savedBookDto = bookService.saveBook(bookDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedBookDto);
+    }
+
+    @CrossOrigin
+    @GetMapping()
+    public List<BookDto> getAllBook(Book books) {
+        return bookService.showAllBooks(books);
     }
 
 }

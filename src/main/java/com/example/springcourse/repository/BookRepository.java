@@ -1,5 +1,6 @@
 package com.example.springcourse.repository;
 
+import com.example.springcourse.dto.book.BookDto;
 import com.example.springcourse.dto.review.ReviewBook;
 import com.example.springcourse.entity.Book;
 import com.example.springcourse.entity.Person;
@@ -23,8 +24,8 @@ public interface BookRepository extends CrudRepository<Book, Integer> {
     List<Review> findReviewBookById(@Param("bookId") Integer bookId);
 
 
-//    @NativeQuery("select * from Book")
-//    List<Book> findAll(Book book);
+    @NativeQuery("select * from Book")
+    List<Book> findAll(Book book);
 
 
 }

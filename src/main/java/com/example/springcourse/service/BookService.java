@@ -1,5 +1,6 @@
 package com.example.springcourse.service;
 
+import com.example.springcourse.dto.book.BookCreateDto;
 import com.example.springcourse.dto.book.BookDto;
 import com.example.springcourse.dto.review.ReviewBook;
 import com.example.springcourse.dto.review.ReviewRequest;
@@ -8,6 +9,7 @@ import com.example.springcourse.entity.Person;
 import com.example.springcourse.entity.Review;
 import com.example.springcourse.repository.BookRepository;
 import com.example.springcourse.repository.PersonRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +30,7 @@ public class BookService {
     private final ModelMapper modelMapper;
 
 
-    public BookDto saveBook(BookDto bookDto) {
+    public BookCreateDto saveBook(BookDto bookDto) {
 
         if (bookDto == null) {
             log.info("Attempt to save null book");
@@ -39,10 +41,10 @@ public class BookService {
         Book savedBook = bookRepository.save(book);
         log.info("Book saved successfully with ID: {}", savedBook.getId());
 
-        return toDto(savedBook);
+        return modelMapper.map(savedBook, BookCreateDto.class);
     }
 
-    public BookDto updateBook(Integer id, BookDto bookDto) {
+    public BookCreateDto updateBook(Integer id, BookCreateDto bookDto) {
         Book book = bookRepository.findBookById(id);
         if (book == null) {
             throw new IllegalArgumentException("Book can't be null");
@@ -51,7 +53,7 @@ public class BookService {
 
         Book updatedBook = bookRepository.save(book);
 
-        return toDto(updatedBook);
+        return modelMapper.map(updatedBook, BookCreateDto.class);
     }
 
     @Transactional
@@ -64,19 +66,30 @@ public class BookService {
     public List<ReviewBook> findReviewByBook(Integer bookId) {
         List<Review> reviews = bookRepository.findReviewBookById(bookId);
        return reviews.stream()
-                .map(review -> {
-                    ReviewBook dto = new ReviewBook();
-                    dto.setPersonId(review.getPerson().getId());
-                    dto.setUsername(review.getPerson().getUserName());
-                    dto.setComment(review.getComment());
-                    dto.setEvaluation(review.getEvaluation());
-                    return dto;
+               .map(review -> {
+                   ReviewBook dto = new ReviewBook();
+                   dto.setPersonId(review.getPerson().getId());
+                   dto.setUsername(review.getPerson().getUserName());
+                   dto.setComment(review.getComment());
+                   dto.setEvaluation(review.getEvaluation());
+                   return dto;
+               })
+               .collect(Collectors.toList());
+    }
+    public List<BookDto> showAllBooks(Book book) {
+        List<Book> books = bookRepository.findAll(book);
+        return books.stream()
+                .map(book1 -> {;
+                    return modelMapper.map(book1, BookDto.class);
                 })
                 .collect(Collectors.toList());
     }
 
 
     public void deleteBook(Integer id) {
+        if (!bookRepository.existsById(id)) {
+            throw new EntityNotFoundException("Запись с ID " + id + " не найдена");
+        }
         this.bookRepository.deleteById(id);
     }
 

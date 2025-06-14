@@ -1,8 +1,10 @@
 package com.example.springcourse.controller;
 
 import com.example.springcourse.dto.person.PersonDto;
+import com.example.springcourse.dto.person.PersonDtoRead;
 import com.example.springcourse.dto.person.PersonFavouriteBooksDto;
 import com.example.springcourse.dto.review.ReviewBook;
+import com.example.springcourse.dto.review.ReviewPersonDto;
 import com.example.springcourse.entity.Person;
 import com.example.springcourse.exception.PersonNotFoundException;
 import com.example.springcourse.service.PersonService;
@@ -41,8 +43,8 @@ public class PersonController {
     }
 
     @GetMapping("/review/{id}")
-    public ResponseEntity<ReviewBook> findPersonReview(@PathVariable Integer id) {
-        ReviewBook reviewBookDto = personService.getReviewPerson(id);
+    public ResponseEntity<List<ReviewPersonDto>> findPersonReview(@PathVariable Integer id) {
+        List<ReviewPersonDto> reviewBookDto = personService.getReviewPerson(id);
         if (reviewBookDto == null) {
             log.info("User can't be null");
             throw new PersonNotFoundException("User with ID " + id + " not found!");
@@ -61,11 +63,11 @@ public class PersonController {
     }
 
     @GetMapping()
-    public List<Person> findAllPerson(Person person) {
+    public List<PersonDtoRead> findAllPerson(Person person) {
         return personService.showAllPerson(person);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<PersonDto> updatePerson(@PathVariable Integer id, @RequestBody PersonDto personDto) {
         PersonDto updatedPersonDto = personService.updatePerson(id, personDto);
         return ResponseEntity.status(HttpStatus.OK).body(updatedPersonDto);
