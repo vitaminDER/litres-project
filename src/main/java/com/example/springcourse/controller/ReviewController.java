@@ -27,13 +27,13 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedReview);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ReviewRequest> updateReview(@PathVariable Integer id,
                                                       @Valid @RequestBody ReviewRequest reviewRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.updateReview(id, reviewRequest));
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ReviewBook> findReview(@PathVariable Integer id) {
         ReviewBook reviewBook = reviewService.findReviewById(id);
         return ResponseEntity.status(HttpStatus.OK).body(reviewBook);

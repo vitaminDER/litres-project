@@ -27,8 +27,8 @@ public interface PersonRepository extends CrudRepository<Person, Integer> {
     @Query("select per from Person per where per.userName = :userName")
     Person findByUserName(String userName);
 
-    @Query("select per from  Person per join fetch per.favouriteBooks where per.id = :id")
-    Person findPersonFavouriteBooks(Integer id);
+    @Query("select per from  Person per join fetch per.favouriteBooks where per.userName = :username")
+    Person findPersonFavouriteBooks(@Param("username") String username);
 
     @Query("select r from Review r left join fetch r.person where r.person.id = :personId")
     List<Review> findPersonReviewById(@Param("personId") Integer personId);

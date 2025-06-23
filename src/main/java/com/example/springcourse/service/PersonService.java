@@ -7,6 +7,7 @@ import com.example.springcourse.dto.review.ReviewBook;
 import com.example.springcourse.dto.review.ReviewPersonDto;
 import com.example.springcourse.entity.Person;
 import com.example.springcourse.entity.Review;
+import com.example.springcourse.exception.PersonNotFoundException;
 import com.example.springcourse.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,8 +46,12 @@ public class PersonService {
     public PersonDto updatePerson(Integer id, PersonDto personDto) {
 
         Person person = personRepository.findPersonById(id);
-        if (person == null) {
-            throw new RuntimeException("Person not found with id: " + id);
+        if(!personRepository.existsById(id)) {
+            throw new PersonNotFoundException("Person with id " + id + " not found");
+        }
+        if (personDto == null) {
+            log.info("Attempt to save null person");
+            throw new IllegalArgumentException("Person can't be NULL!");
         }
 
         modelMapper.map(personDto, person);
@@ -64,11 +69,17 @@ public class PersonService {
     }
 
     public void deletePerson(Integer id) {
+        if(!personRepository.existsById(id)) {
+            throw new PersonNotFoundException("Person with id " + id + " not found");
+        }
         this.personRepository.deleteById(id);
     }
 
     public List<ReviewPersonDto> getReviewPerson(Integer id) {
         List<Review> reviewsList = personRepository.findPersonReviewById(id);
+        if(!personRepository.existsById(id)) {
+            throw new PersonNotFoundException("Person with id " + id + " not found");
+        }
         return reviewsList.stream()
                 .map(review -> {
                   ReviewPersonDto dto = new ReviewPersonDto();
@@ -84,11 +95,14 @@ public class PersonService {
 
     public PersonDto getPersonInfo(Integer id) {
         Person person = personRepository.findPersonById(id);
+        if(!personRepository.existsById(id)) {
+            throw new PersonNotFoundException("Person with id " + id + " not found");
+        }
         return toDto(person);
     }
 
-    public PersonFavouriteBooksDto getPersonFavouriteBooks(Integer id) {
-        Person person = personRepository.findPersonFavouriteBooks(id);
+    public PersonFavouriteBooksDto getPersonFavouriteBooks(String username) {
+        Person person = personRepository.findPersonFavouriteBooks(username);
         return modelMapper.map(person, PersonFavouriteBooksDto.class);
     }
 

@@ -3,12 +3,13 @@ package com.example.springcourse.controller;
 import com.example.springcourse.dto.book.BookCreateDto;
 import com.example.springcourse.dto.book.BookDto;
 import com.example.springcourse.dto.review.ReviewBook;
-import com.example.springcourse.dto.review.ReviewRequest;
-import com.example.springcourse.dto.review.ReviewResponse;
 import com.example.springcourse.entity.Book;
-import com.example.springcourse.exception.PersonNotFoundException;
 import com.example.springcourse.service.BookService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,10 +29,6 @@ public class BookController {
     @GetMapping("/info/{id}")
     public ResponseEntity<BookDto> findBook(@PathVariable Integer id) {
         BookDto bookDTO = bookService.findBook(id);
-        if (bookDTO == null) {
-            log.info("Person can't be null");
-            throw new PersonNotFoundException("Person with ID " + id + " not found!");
-        }
         return ResponseEntity.status(HttpStatus.OK).body(bookDTO);
     }
 
@@ -40,6 +37,20 @@ public class BookController {
         List<ReviewBook> reviewBookDTO = bookService.findReviewByBook(bookId);
         return ResponseEntity.status(HttpStatus.OK).body(reviewBookDTO);
     }
+
+    @GetMapping("/review")
+    public ResponseEntity<List<ReviewBook>> findReviewOnBookWithEvaluation(@RequestParam ("title")  String title,
+                                                                           @RequestParam ("evaluation") Integer evaluation){
+        List<ReviewBook> reviewBooks = bookService.findReviewWithEvaluation(title, evaluation);
+        return ResponseEntity.status(HttpStatus.OK).body(reviewBooks);
+    }
+
+    @GetMapping("/genre")
+    public ResponseEntity<List<BookDto>> findBookByGenre(@RequestParam ("genre") String genre) {
+        List<BookDto> bookDtoList = bookService.findBookByGenre(genre);
+        return  ResponseEntity.status(HttpStatus.OK).body(bookDtoList);
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<BookCreateDto> updateBook(@PathVariable Integer id, @RequestBody BookCreateDto bookCreateDto) {

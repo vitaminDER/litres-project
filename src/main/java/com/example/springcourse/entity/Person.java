@@ -33,7 +33,7 @@ public class Person {
     private String lastName;
 
     @Column(name = "age")
-    @Min(value = 0)
+    @Min(value = 1)
     private int age;
 
     @Column(name = "email")

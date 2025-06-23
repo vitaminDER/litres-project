@@ -1,4 +1,4 @@
-package com.example.springcourse.util;
+package com.example.springcourse.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

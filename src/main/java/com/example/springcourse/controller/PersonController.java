@@ -35,32 +35,15 @@ public class PersonController {
     @GetMapping("/info/{id}")
     public ResponseEntity<PersonDto> findPersonInfo(@PathVariable Integer id) {
         PersonDto personDto = personService.getPersonInfo(id);
-        if (personDto == null) {
-            log.info("Person can't be null");
-            throw new PersonNotFoundException("Person with ID " + id + " not found!");
-        }
         return ResponseEntity.status(HttpStatus.OK).body(personDto);
     }
 
     @GetMapping("/review/{id}")
     public ResponseEntity<List<ReviewPersonDto>> findPersonReview(@PathVariable Integer id) {
         List<ReviewPersonDto> reviewBookDto = personService.getReviewPerson(id);
-        if (reviewBookDto == null) {
-            log.info("User can't be null");
-            throw new PersonNotFoundException("User with ID " + id + " not found!");
-        }
         return ResponseEntity.status(HttpStatus.OK).body(reviewBookDto);
     }
 
-    @GetMapping("/favouriteBooks/{id}")
-    public ResponseEntity<PersonFavouriteBooksDto> findFavouriteBooksPerson(@PathVariable Integer id) {
-        PersonFavouriteBooksDto personFavouriteBooksDto = personService.getPersonFavouriteBooks(id);
-        if (personFavouriteBooksDto == null) {
-            log.info("User can't be null");
-            throw new PersonNotFoundException("User with ID " + id + " not found!");
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(personFavouriteBooksDto);
-    }
 
     @GetMapping()
     public List<PersonDtoRead> findAllPerson(Person person) {
@@ -77,5 +60,11 @@ public class PersonController {
     @DeleteMapping("{id}")
     public void deletePerson(@PathVariable Integer id) {
         this.personService.deletePerson(id);
+    }
+
+    @GetMapping("/favouriteBooks")
+    public ResponseEntity<PersonFavouriteBooksDto> findFavouriteBooksPerson(@RequestParam("username") String username) {
+        PersonFavouriteBooksDto personFavouriteBooksDto = personService.getPersonFavouriteBooks(username);
+        return ResponseEntity.status(HttpStatus.OK).body(personFavouriteBooksDto);
     }
 }

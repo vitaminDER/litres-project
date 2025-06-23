@@ -21,8 +21,13 @@ public interface BookRepository extends CrudRepository<Book, Integer> {
     Book findBookById(@Param("id") int id);
 
     @Query("SELECT r FROM Review r LEFT JOIN FETCH r.person WHERE r.book.id = :bookId")
-    List<Review> findReviewBookById(@Param("bookId") Integer bookId);
+    List<Review> findReviewOnBookById(@Param("bookId") Integer bookId);
 
+    @Query("select r from Review r join fetch r.book b where  b.title = :title and r.evaluation = :evaluation")
+    List<Review> findReviewOnBookWithEvaluation(@Param("title") String title, @Param("evaluation") Integer evaluation);
+
+    @Query("select bk from Book bk join fetch bk.genre g where g.name = :genre")
+    List<Book> findBooksByGenre(@Param("genre") String genre);
 
     @NativeQuery("select * from Book")
     List<Book> findAll(Book book);
