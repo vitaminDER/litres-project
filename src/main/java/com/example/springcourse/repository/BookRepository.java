@@ -32,6 +32,6 @@ public interface BookRepository extends CrudRepository<Book, Integer> {
     @NativeQuery("select * from Book")
     List<Book> findAll(Book book);
 
-
 }
+
 

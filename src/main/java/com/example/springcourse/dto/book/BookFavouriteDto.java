@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class BookFavouriteDto {
 
+   private int id;
    private String title;
    private String author;
    private int year;

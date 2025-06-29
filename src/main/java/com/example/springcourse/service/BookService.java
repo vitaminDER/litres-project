@@ -68,39 +68,34 @@ public class BookService {
 
     @Transactional
     public List<ReviewBook> findReviewByBook(Integer bookId) {
-        List<Review> reviews = bookRepository.findReviewOnBookById(bookId);
         if (!bookRepository.existsById(bookId)) {
             throw new BookNotFoundException("Book with id " + bookId + " not found");
         }
-        return reviews.stream()
+        return bookRepository.findReviewOnBookById(bookId).stream()
                 .map(this::convertToReviewBookDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional
     public List<ReviewBook> findReviewWithEvaluation(String title, Integer evaluation) {
-        List<Review> reviewsList = bookRepository.findReviewOnBookWithEvaluation(title, evaluation);
         List<String> errors = new ArrayList<>();
         if (title == null || title.isBlank()) {
             errors.add("Title can't be blank!");
         }
-        if(evaluation > 5 || evaluation < 0) {
+        if (evaluation > 5 || evaluation < 1) {
             errors.add("Evaluation with " + evaluation + " need be more 0 and less 5");
-        } if (!errors.isEmpty()) {
+        }
+        if (!errors.isEmpty()) {
             throw new BookValidationException("Error validation", errors);
         }
-        return reviewsList.stream()
+        return bookRepository.findReviewOnBookWithEvaluation(title, evaluation).stream()
                 .map(this::convertToReviewBookDto)
                 .collect(Collectors.toList());
     }
 
     public List<BookDto> showAllBooks(Book book) {
-        List<Book> books = bookRepository.findAll(book);
-        return books.stream()
-                .map(book1 -> {
-                    ;
-                    return modelMapper.map(book1, BookDto.class);
-                })
+        return bookRepository.findAll(book).stream()
+                .map(book1 -> modelMapper.map(book1, BookDto.class))
                 .collect(Collectors.toList());
     }
 
@@ -125,6 +120,7 @@ public class BookService {
         dto.setUsername(review.getPerson().getUserName());
         dto.setComment(review.getComment());
         dto.setEvaluation(review.getEvaluation());
+        dto.setCreatedDate(review.getCreatedDate());
         return dto;
     }
 

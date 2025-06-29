@@ -5,9 +5,11 @@ import com.example.springcourse.dto.person.PersonDtoRead;
 import com.example.springcourse.dto.person.PersonFavouriteBooksDto;
 import com.example.springcourse.dto.review.ReviewBook;
 import com.example.springcourse.dto.review.ReviewPersonDto;
+import com.example.springcourse.entity.Book;
 import com.example.springcourse.entity.Person;
 import com.example.springcourse.entity.Review;
 import com.example.springcourse.exception.PersonNotFoundException;
+import com.example.springcourse.repository.BookRepository;
 import com.example.springcourse.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,7 @@ public class PersonService {
 
     private final PersonRepository personRepository;
     private final ModelMapper modelMapper;
+    private final BookRepository bookRepository;
 
     public PersonDto savePerson(PersonDto personDto) {
 
@@ -46,7 +49,7 @@ public class PersonService {
     public PersonDto updatePerson(Integer id, PersonDto personDto) {
 
         Person person = personRepository.findPersonById(id);
-        if(!personRepository.existsById(id)) {
+        if (!personRepository.existsById(id)) {
             throw new PersonNotFoundException("Person with id " + id + " not found");
         }
         if (personDto == null) {
@@ -60,50 +63,48 @@ public class PersonService {
     }
 
     public List<PersonDtoRead> showAllPerson(Person person) {
-        List<Person> personList = personRepository.findAllPerson(person);
-        return personList.stream()
-                .map(person1 -> {
-                    return modelMapper.map(person1, PersonDtoRead.class);
-                })
+        return personRepository.findAllPerson(person).stream()
+                .map(person1 -> modelMapper.map(person1, PersonDtoRead.class))
                 .collect(Collectors.toList());
     }
 
     public void deletePerson(Integer id) {
-        if(!personRepository.existsById(id)) {
+        if (!personRepository.existsById(id)) {
             throw new PersonNotFoundException("Person with id " + id + " not found");
         }
         this.personRepository.deleteById(id);
     }
 
     public List<ReviewPersonDto> getReviewPerson(Integer id) {
-        List<Review> reviewsList = personRepository.findPersonReviewById(id);
-        if(!personRepository.existsById(id)) {
+        if (!personRepository.existsById(id)) {
             throw new PersonNotFoundException("Person with id " + id + " not found");
         }
-        return reviewsList.stream()
-                .map(review -> {
-                  ReviewPersonDto dto = new ReviewPersonDto();
-                  dto.setPersonId(review.getPerson().getId());
-                  dto.setUsername(review.getPerson().getUserName());
-                  dto.setTitle(review.getTitle());
-                  dto.setComment(review.getComment());
-                  dto.setEvaluation(review.getEvaluation());
-                  return dto;
-                })
+        return personRepository.findPersonReviewById(id).stream()
+                .map(this::convertToReviewPersonDto)
                 .collect(Collectors.toList());
     }
 
-    public PersonDto getPersonInfo(Integer id) {
+    public PersonDtoRead getPersonInfo(Integer id) {
         Person person = personRepository.findPersonById(id);
-        if(!personRepository.existsById(id)) {
+        if (!personRepository.existsById(id)) {
             throw new PersonNotFoundException("Person with id " + id + " not found");
         }
-        return toDto(person);
+        return modelMapper.map(person, PersonDtoRead.class);
     }
 
     public PersonFavouriteBooksDto getPersonFavouriteBooks(String username) {
         Person person = personRepository.findPersonFavouriteBooks(username);
         return modelMapper.map(person, PersonFavouriteBooksDto.class);
+    }
+
+    ReviewPersonDto convertToReviewPersonDto(Review review) {
+        var reviewPersonDto = new ReviewPersonDto();
+        reviewPersonDto.setPersonId(review.getPerson().getId());
+        reviewPersonDto.setUsername(review.getPerson().getUserName());
+        reviewPersonDto.setTitle(review.getTitle());
+        reviewPersonDto.setComment(review.getComment());
+        reviewPersonDto.setEvaluation(review.getEvaluation());
+        return reviewPersonDto;
     }
 
     PersonDto toDto(Person person) {

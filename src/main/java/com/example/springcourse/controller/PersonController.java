@@ -28,20 +28,17 @@ public class PersonController {
 
     @PostMapping()
     public ResponseEntity<PersonDto> createPerson(@RequestBody @Valid PersonDto personDto) {
-        PersonDto savedPerson = personService.savePerson(personDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedPerson);
+        return ResponseEntity.status(HttpStatus.CREATED).body(personService.savePerson(personDto));
     }
 
     @GetMapping("/info/{id}")
-    public ResponseEntity<PersonDto> findPersonInfo(@PathVariable Integer id) {
-        PersonDto personDto = personService.getPersonInfo(id);
-        return ResponseEntity.status(HttpStatus.OK).body(personDto);
+    public ResponseEntity<PersonDtoRead> findPersonInfo(@PathVariable Integer id) {
+        return ResponseEntity.status(HttpStatus.OK).body(personService.getPersonInfo(id));
     }
 
     @GetMapping("/review/{id}")
     public ResponseEntity<List<ReviewPersonDto>> findPersonReview(@PathVariable Integer id) {
-        List<ReviewPersonDto> reviewBookDto = personService.getReviewPerson(id);
-        return ResponseEntity.status(HttpStatus.OK).body(reviewBookDto);
+        return ResponseEntity.status(HttpStatus.OK).body(personService.getReviewPerson(id));
     }
 
 
@@ -51,9 +48,9 @@ public class PersonController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PersonDto> updatePerson(@PathVariable Integer id, @RequestBody PersonDto personDto) {
-        PersonDto updatedPersonDto = personService.updatePerson(id, personDto);
-        return ResponseEntity.status(HttpStatus.OK).body(updatedPersonDto);
+    public ResponseEntity<PersonDto> updatePerson(@PathVariable Integer id,
+                                                  @RequestBody PersonDto personDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(personService.updatePerson(id, personDto));
 
     }
 
@@ -64,7 +61,6 @@ public class PersonController {
 
     @GetMapping("/favouriteBooks")
     public ResponseEntity<PersonFavouriteBooksDto> findFavouriteBooksPerson(@RequestParam("username") String username) {
-        PersonFavouriteBooksDto personFavouriteBooksDto = personService.getPersonFavouriteBooks(username);
-        return ResponseEntity.status(HttpStatus.OK).body(personFavouriteBooksDto);
+        return ResponseEntity.status(HttpStatus.OK).body(personService.getPersonFavouriteBooks(username));
     }
 }

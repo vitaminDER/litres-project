@@ -23,8 +23,8 @@ public class ReviewController {
     public ResponseEntity<ReviewResponse> createReview(@PathVariable Integer bookId,
                                                        @PathVariable Integer personId,
                                                        @Valid @RequestBody ReviewRequest reviewRequest) {
-        ReviewResponse savedReview = reviewService.savePersonReviewByBook(bookId, personId, reviewRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedReview);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                reviewService.savePersonReviewByBook(bookId, personId, reviewRequest));
     }
 
     @PutMapping("/{id}")
@@ -35,8 +35,7 @@ public class ReviewController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ReviewBook> findReview(@PathVariable Integer id) {
-        ReviewBook reviewBook = reviewService.findReviewById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(reviewBook);
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.findReviewById(id));
     }
 
     @DeleteMapping("{id}")

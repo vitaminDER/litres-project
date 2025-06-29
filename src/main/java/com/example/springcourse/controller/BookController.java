@@ -27,35 +27,31 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping("/info/{id}")
-    public ResponseEntity<BookDto> findBook(@PathVariable Integer id) {
-        BookDto bookDTO = bookService.findBook(id);
-        return ResponseEntity.status(HttpStatus.OK).body(bookDTO);
+    public ResponseEntity<BookDto> findBookInfo(@PathVariable Integer id) {
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.findBook(id));
     }
 
     @GetMapping("/review/{bookId}")
     public ResponseEntity<List<ReviewBook>> findReviewByBook(@PathVariable Integer bookId) {
-        List<ReviewBook> reviewBookDTO = bookService.findReviewByBook(bookId);
-        return ResponseEntity.status(HttpStatus.OK).body(reviewBookDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewByBook(bookId));
     }
 
     @GetMapping("/review")
-    public ResponseEntity<List<ReviewBook>> findReviewOnBookWithEvaluation(@RequestParam ("title")  String title,
-                                                                           @RequestParam ("evaluation") Integer evaluation){
-        List<ReviewBook> reviewBooks = bookService.findReviewWithEvaluation(title, evaluation);
-        return ResponseEntity.status(HttpStatus.OK).body(reviewBooks);
+    public ResponseEntity<List<ReviewBook>> findReviewOnBookByTitleAndEvaluation(@RequestParam("title") String title,
+                                                                                 @RequestParam("evaluation") Integer evaluation) {
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewWithEvaluation(title, evaluation));
     }
 
     @GetMapping("/genre")
-    public ResponseEntity<List<BookDto>> findBookByGenre(@RequestParam ("genre") String genre) {
-        List<BookDto> bookDtoList = bookService.findBookByGenre(genre);
-        return  ResponseEntity.status(HttpStatus.OK).body(bookDtoList);
+    public ResponseEntity<List<BookDto>> findBookByGenre(@RequestParam("genre") String genre) {
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.findBookByGenre(genre));
     }
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<BookCreateDto> updateBook(@PathVariable Integer id, @RequestBody BookCreateDto bookCreateDto) {
-        BookCreateDto updatedBookDto = bookService.updateBook(id, bookCreateDto);
-        return ResponseEntity.status(HttpStatus.OK).body(updatedBookDto);
+    public ResponseEntity<BookCreateDto> updateBook(@PathVariable Integer id,
+                                                    @RequestBody BookCreateDto bookCreateDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.updateBook(id, bookCreateDto));
     }
 
     @CrossOrigin
@@ -67,8 +63,7 @@ public class BookController {
 
     @PostMapping()
     public ResponseEntity<BookCreateDto> createBook(@RequestBody @Valid BookDto bookDTO) {
-        BookCreateDto savedBookDto = bookService.saveBook(bookDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedBookDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.saveBook(bookDTO));
     }
 
     @CrossOrigin
