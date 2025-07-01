@@ -36,11 +36,11 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewByBook(bookId));
     }
 
-//    @GetMapping("/review")
-//    public ResponseEntity<List<ReviewBook>> findReviewOnBookByTitleAndEvaluation(@RequestParam("title") String title,
-//                                                                                 @RequestParam("evaluation") Integer evaluation) {
-//        return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewWithEvaluation(title, evaluation));
-//    }
+    @GetMapping("/review")
+    public ResponseEntity<List<ReviewBook>> findReviewOnBookByTitleAndEvaluation(@RequestParam("title") String title,
+                                                                                 @RequestParam("evaluation") Integer evaluation) {
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewWithEvaluation(title, evaluation));
+    }
 
     @GetMapping("/genre")
     public ResponseEntity<List<BookDto>> findBookByGenre(@RequestParam("genre") String genre) {
