@@ -2,6 +2,7 @@ package com.example.springcourse.controller;
 
 import com.example.springcourse.dto.book.BookCreateDto;
 import com.example.springcourse.dto.book.BookDto;
+import com.example.springcourse.dto.book.BookReadDto;
 import com.example.springcourse.dto.review.ReviewBook;
 import com.example.springcourse.entity.Book;
 import com.example.springcourse.service.BookService;
@@ -47,6 +48,11 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.findBookByGenre(genre));
     }
 
+    @GetMapping("/title")
+    public ResponseEntity<BookDto> findBookByTitle(@RequestParam("title") String title) {
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.findBookByTitle(title));
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<BookCreateDto> updateBook(@PathVariable Integer id,
@@ -68,7 +74,7 @@ public class BookController {
 
     @CrossOrigin
     @GetMapping()
-    public List<BookDto> getAllBook(Book books) {
+    public List<BookReadDto> getAllBook(Book books) {
         return bookService.showAllBooks(books);
     }
 

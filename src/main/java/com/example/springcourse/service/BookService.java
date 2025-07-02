@@ -2,6 +2,7 @@ package com.example.springcourse.service;
 
 import com.example.springcourse.dto.book.BookCreateDto;
 import com.example.springcourse.dto.book.BookDto;
+import com.example.springcourse.dto.book.BookReadDto;
 import com.example.springcourse.dto.review.ReviewBook;
 import com.example.springcourse.entity.Book;
 import com.example.springcourse.entity.Review;
@@ -93,9 +94,9 @@ public class BookService {
                 .collect(Collectors.toList());
     }
 
-    public List<BookDto> showAllBooks(Book book) {
+    public List<BookReadDto> showAllBooks(Book book) {
         return bookRepository.findAll(book).stream()
-                .map(book1 -> modelMapper.map(book1, BookDto.class))
+                .map(book1 -> modelMapper.map(book1, BookReadDto.class))
                 .collect(Collectors.toList());
     }
 
@@ -104,6 +105,11 @@ public class BookService {
                 .stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
+    }
+
+    public BookDto findBookByTitle(String title) {
+        Book book = bookRepository.findBookByTitle(title);
+        return toDto(book);
     }
 
 

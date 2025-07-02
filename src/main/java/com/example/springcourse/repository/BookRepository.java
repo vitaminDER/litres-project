@@ -20,6 +20,9 @@ public interface BookRepository extends CrudRepository<Book, Integer> {
     @Query("select bk from Book bk where bk.id = :id")
     Book findBookById(@Param("id") int id);
 
+    @Query("select bk from Book bk where bk.title = :title")
+    Book findBookByTitle(@Param("title") String title);
+
     @Query("SELECT r FROM Review r LEFT JOIN FETCH r.person WHERE r.book.id = :bookId")
     List<Review> findReviewOnBookById(@Param("bookId") Integer bookId);
 
