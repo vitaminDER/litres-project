@@ -2,6 +2,7 @@ package com.example.springcourse.controller;
 
 import com.example.springcourse.dto.book.BookCreateDto;
 import com.example.springcourse.dto.book.BookDto;
+import com.example.springcourse.dto.book.BookReadDto;
 import com.example.springcourse.dto.review.ReviewBook;
 import com.example.springcourse.entity.Book;
 import com.example.springcourse.service.BookService;
@@ -26,28 +27,32 @@ public class BookController {
 
     private final BookService bookService;
 
-    @GetMapping("/info/{id}")
-    public ResponseEntity<BookDto> findBookInfo(@PathVariable Integer id) {
+    @CrossOrigin
+    @GetMapping("/info")
+    public ResponseEntity<BookDto> findBookInfo(@RequestParam("id") Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.findBook(id));
     }
 
-    @GetMapping("/review/{bookId}")
-    public ResponseEntity<List<ReviewBook>> findReviewByBook(@PathVariable Integer bookId) {
+    @CrossOrigin
+    @GetMapping("/review")
+    public ResponseEntity<List<ReviewBook>> findReviewByBook(@RequestParam("bookId") Integer bookId) {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewByBook(bookId));
     }
 
-//    @GetMapping("/review")
-//    public ResponseEntity<List<ReviewBook>> findReviewOnBookByTitleAndEvaluation(@RequestParam("title") String title,
-//                                                                                 @RequestParam("evaluation") Integer evaluation) {
-//        return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewWithEvaluation(title, evaluation));
-//    }
+    @CrossOrigin
+    @GetMapping("/reviewOnBook")
+    public ResponseEntity<List<ReviewBook>> findReviewOnBookByTitleAndEvaluation(@RequestParam("title") String title,
+                                                                                 @RequestParam("evaluation") Integer evaluation) {
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewWithEvaluation(title, evaluation));
+    }
 
+    @CrossOrigin
     @GetMapping("/genre")
     public ResponseEntity<List<BookDto>> findBookByGenre(@RequestParam("genre") String genre) {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.findBookByGenre(genre));
     }
 
-
+    @CrossOrigin
     @PutMapping("/{id}")
     public ResponseEntity<BookCreateDto> updateBook(@PathVariable Integer id,
                                                     @RequestBody BookCreateDto bookCreateDto) {
@@ -61,6 +66,7 @@ public class BookController {
     }
 
 
+    @CrossOrigin
     @PostMapping()
     public ResponseEntity<BookCreateDto> createBook(@RequestBody @Valid BookDto bookDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.saveBook(bookDTO));
@@ -68,7 +74,7 @@ public class BookController {
 
     @CrossOrigin
     @GetMapping()
-    public List<BookDto> getAllBook(Book books) {
+    public List<BookReadDto> getAllBook(Book books) {
         return bookService.showAllBooks(books);
     }
 

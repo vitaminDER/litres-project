@@ -40,6 +40,9 @@ public class Book {
     @Column(name = "rating")
     private BigDecimal rating;
 
+    @Column(name = "image")
+    private String image;
+
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "book_genre",
@@ -60,6 +63,12 @@ public class Book {
     @ManyToMany(mappedBy = "favouriteBooks", fetch = FetchType.LAZY)
     @JsonIgnore
     List<Person> person;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "book_rating",
+    joinColumns = @JoinColumn(name = "book_id"),
+    inverseJoinColumns = @JoinColumn(name = "person_id"))
+    List<BookRating> bookRating;
 
 
 }

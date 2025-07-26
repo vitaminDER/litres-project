@@ -26,8 +26,9 @@ public class BookDto {
 
     private String description;
 
-//    private List<Genre> genre;
+    private List<Genre> genre;
 
-//    private PersonReviewDTO review;
+    private String image;
+
 
 }
