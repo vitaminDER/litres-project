@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,6 +62,7 @@ public class BookService {
     @Transactional
     public BookDto findBook(Integer id) {
         Book book = bookRepository.findBookById(id);
+        averageRatingBook(id);
         if (!bookRepository.existsById(id)) {
             throw new BookNotFoundException("Book with id " + id + " not found");
         }
@@ -118,6 +120,16 @@ public class BookService {
             throw new EntityNotFoundException("Запись с ID " + id + " не найдена");
         }
         this.bookRepository.deleteById(id);
+    }
+
+    public void averageRatingBook(Integer id) {
+        Double averageRating = bookRepository.calculateAverageRatingBook(id);
+        if(averageRating == null) {
+            averageRating = 0.0;
+        }
+        Book book = bookRepository.findBookById(id);
+        book.setRating(BigDecimal.valueOf(Math.floor(averageRating * 10) / 10));
+        bookRepository.save(book);
     }
 
     ReviewBook convertToReviewBookDto(Review review) {
