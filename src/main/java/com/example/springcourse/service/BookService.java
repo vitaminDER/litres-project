@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import com.example.springcourse.dto.page.PageDto;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -75,13 +76,20 @@ public class BookService {
     }
 
     @Transactional
-    public Page<ReviewBook> findReviewByBook(Integer bookId, int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+    public PageDto<ReviewBook> findReviewByBook(Integer bookId, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Page<Review> pageReviews = reviewRepository.findAllReviewsByBook(bookId, pageable);
         if (!bookRepository.existsById(bookId)) {
             throw new BookNotFoundException("Book with id " + bookId + " not found");
         }
-        return reviewRepository.findAllReviewsByBook(bookId, pageable)
-                .map(this::convertToReviewBookDto);
+        return new PageDto<>(
+                pageReviews.getContent().stream()
+                        .map(this::convertToReviewBookDto)
+                        .collect(Collectors.toList()),
+                pageReviews.getNumber(),
+                pageReviews.getSize(),
+                pageReviews.getTotalPages()
+        );
     }
 
     @Transactional
@@ -129,7 +137,7 @@ public class BookService {
 
     public void averageRatingBook(Integer id) {
         Double averageRating = bookRepository.calculateAverageRatingBook(id);
-        if(averageRating == null) {
+        if (averageRating == null) {
             averageRating = 0.0;
         }
         Book book = bookRepository.findBookById(id);

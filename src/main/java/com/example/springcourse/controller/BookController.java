@@ -9,10 +9,11 @@ import com.example.springcourse.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.example.springcourse.dto.page.PageDto;
+
 import java.util.List;
 
 @RestController
@@ -31,9 +32,9 @@ public class BookController {
 
     @CrossOrigin
     @GetMapping("/review")
-    public ResponseEntity<Page<ReviewBook>> findReviewByBook(@RequestParam("bookId") Integer bookId,
-                                                             @RequestParam(defaultValue = "1") int pageNumber,
-                                                             @RequestParam(defaultValue = "10") int pageSize) {
+    public ResponseEntity<PageDto<ReviewBook>>findReviewByBook(@RequestParam("bookId") Integer bookId,
+                                                               @RequestParam(defaultValue = "1") int pageNumber,
+                                                               @RequestParam(defaultValue = "10") int pageSize) {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewByBook(bookId,pageNumber,pageSize));
     }
 
