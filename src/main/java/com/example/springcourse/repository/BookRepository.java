@@ -5,17 +5,21 @@ import com.example.springcourse.dto.review.ReviewBook;
 import com.example.springcourse.entity.Book;
 import com.example.springcourse.entity.Person;
 import com.example.springcourse.entity.Review;
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.NativeQuery;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.naming.InsufficientResourcesException;
+import java.awt.print.Pageable;
 import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
-public interface BookRepository extends CrudRepository<Book, Integer> {
+public interface BookRepository extends JpaRepository<Book, Integer> {
 
 
     @Query("select bk from Book bk where bk.id = :id")

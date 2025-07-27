@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,8 +36,10 @@ public class BookController {
 
     @CrossOrigin
     @GetMapping("/review")
-    public ResponseEntity<List<ReviewBook>> findReviewByBook(@RequestParam("bookId") Integer bookId) {
-        return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewByBook(bookId));
+    public ResponseEntity<Page<ReviewBook>> findReviewByBook(@RequestParam("bookId") Integer bookId,
+                                                             @RequestParam(defaultValue = "0") int page,
+                                                             @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewByBook(bookId,page,size));
     }
 
     @CrossOrigin

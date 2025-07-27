@@ -9,11 +9,15 @@ import com.example.springcourse.entity.Review;
 import com.example.springcourse.exception.BookNotFoundException;
 import com.example.springcourse.exception.BookValidationException;
 import com.example.springcourse.repository.BookRepository;
+import com.example.springcourse.repository.ReviewRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -27,6 +31,7 @@ import java.util.stream.Collectors;
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final ReviewRepository reviewRepository;
     private final ModelMapper modelMapper;
 
 
@@ -70,13 +75,13 @@ public class BookService {
     }
 
     @Transactional
-    public List<ReviewBook> findReviewByBook(Integer bookId) {
+    public Page<ReviewBook> findReviewByBook(Integer bookId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
         if (!bookRepository.existsById(bookId)) {
             throw new BookNotFoundException("Book with id " + bookId + " not found");
         }
-        return bookRepository.findReviewOnBookById(bookId).stream()
-                .map(this::convertToReviewBookDto)
-                .collect(Collectors.toList());
+        return reviewRepository.findAllReviewsByBook(bookId, pageable)
+                .map(this::convertToReviewBookDto);
     }
 
     @Transactional
