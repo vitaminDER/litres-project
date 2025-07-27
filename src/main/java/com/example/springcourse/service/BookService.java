@@ -76,7 +76,7 @@ public class BookService {
 
     @Transactional
     public Page<ReviewBook> findReviewByBook(Integer bookId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page-1, size);
         if (!bookRepository.existsById(bookId)) {
             throw new BookNotFoundException("Book with id " + bookId + " not found");
         }
