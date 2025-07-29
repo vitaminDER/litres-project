@@ -77,7 +77,7 @@ public class BookService {
 
     @Transactional
     public PageDto<ReviewBook> findReviewByBook(Integer bookId, int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
         Page<Review> pageReviews = reviewRepository.findAllReviewsByBook(bookId, pageable);
         if (!bookRepository.existsById(bookId)) {
             throw new BookNotFoundException("Book with id " + bookId + " not found");
@@ -86,7 +86,7 @@ public class BookService {
                 pageReviews.getContent().stream()
                         .map(this::convertToReviewBookDto)
                         .collect(Collectors.toList()),
-                pageReviews.getNumber(),
+                pageReviews.getNumber()+1,
                 pageReviews.getSize(),
                 pageReviews.getTotalPages()
         );

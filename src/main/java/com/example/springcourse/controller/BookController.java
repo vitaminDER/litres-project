@@ -33,8 +33,8 @@ public class BookController {
     @CrossOrigin
     @GetMapping("/review")
     public ResponseEntity<PageDto<ReviewBook>>findReviewByBook(@RequestParam("bookId") Integer bookId,
-                                                               @RequestParam(defaultValue = "1") int pageNumber,
-                                                               @RequestParam(defaultValue = "10") int pageSize) {
+                                                               @RequestParam() int pageNumber,
+                                                               @RequestParam() int pageSize) {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewByBook(bookId,pageNumber,pageSize));
     }
 
