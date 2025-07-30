@@ -1,12 +1,8 @@
 package com.example.springcourse.controller;
 
-import com.example.springcourse.dto.person.PersonDto;
-import com.example.springcourse.dto.person.PersonDtoRead;
-import com.example.springcourse.dto.person.PersonFavouriteBooksDto;
-import com.example.springcourse.dto.review.ReviewBook;
+import com.example.springcourse.dto.person.*;
 import com.example.springcourse.dto.review.ReviewPersonDto;
 import com.example.springcourse.entity.Person;
-import com.example.springcourse.exception.PersonNotFoundException;
 import com.example.springcourse.service.PersonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +26,16 @@ public class PersonController {
     public ResponseEntity<PersonDto> createPerson(@RequestBody @Valid PersonDto personDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(personService.savePerson(personDto));
     }
+
+//    @PostMapping("/signup")
+//    public ResponseEntity<?> userSignup(@RequestBody @Valid PersonRegistrationDto personRegistrationDto) {
+//        return ResponseEntity.status(HttpStatus.CREATED).body(personService.userSignup(personRegistrationDto));
+//    }
+//
+//    @PostMapping("/signin")
+//    public ResponseEntity<?> userSigin(@Valid @RequestBody PersonAuthenticationDto personAuthenticationDto) {
+//        return ResponseEntity.ok(personService.userSignin(personAuthenticationDto));
+//    }
 
     @GetMapping("/info/{id}")
     public ResponseEntity<PersonDtoRead> findPersonInfo(@PathVariable Integer id) {

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PersonRepository extends CrudRepository<Person, Integer> {
+public interface PersonRepository extends JpaRepository<Person, Integer> {
 
     @Query("select per from Person per where per.id = :id")
     Person findPersonById(Integer id);
@@ -32,4 +32,6 @@ public interface PersonRepository extends CrudRepository<Person, Integer> {
     @NativeQuery("Select * From Person")
     List<Person> findAllPerson(Person person);
 
+    @Query("select per from Person per where per.login = :login")
+    Optional<Person> findPersonByLogin(String login);
 }
