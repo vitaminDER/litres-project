@@ -1,0 +1,31 @@
+package com.example.springcourse.controller;
+
+import com.example.springcourse.dto.person.PersonAuthenticationDto;
+import com.example.springcourse.dto.person.PersonRegistrationDto;
+import com.example.springcourse.service.PersonAuthenticationService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/auth")
+public class AuthenticationController {
+
+    private final PersonAuthenticationService personAuthenticationService;
+
+    @PostMapping("/signup")
+    public ResponseEntity<?> userSignup(@RequestBody @Valid PersonRegistrationDto personRegistrationDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(personAuthenticationService.userSignup(personRegistrationDto));
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<?> userSigin(@Valid @RequestBody PersonAuthenticationDto personAuthenticationDto) {
+        return ResponseEntity.ok(personAuthenticationService.userSignin(personAuthenticationDto));
+    }
+}
