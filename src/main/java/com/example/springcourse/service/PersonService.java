@@ -1,20 +1,21 @@
 package com.example.springcourse.service;
 
-import com.example.springcourse.dto.person.PersonDto;
-import com.example.springcourse.dto.person.PersonDtoRead;
-import com.example.springcourse.dto.person.PersonFavouriteBooksDto;
-import com.example.springcourse.dto.review.ReviewBook;
+import com.example.springcourse.dto.common.MessageResponse;
+import com.example.springcourse.dto.person.*;
 import com.example.springcourse.dto.review.ReviewPersonDto;
-import com.example.springcourse.entity.Book;
 import com.example.springcourse.entity.Person;
 import com.example.springcourse.entity.Review;
+import com.example.springcourse.entity.role.Role;
 import com.example.springcourse.exception.PersonNotFoundException;
-import com.example.springcourse.repository.BookRepository;
 import com.example.springcourse.repository.PersonRepository;
+import com.example.springcourse.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +27,7 @@ public class PersonService {
 
     private final PersonRepository personRepository;
     private final ModelMapper modelMapper;
-    private final BookRepository bookRepository;
+    private final RoleRepository roleRepository;
 
     public PersonDto savePerson(PersonDto personDto) {
 
@@ -45,6 +46,34 @@ public class PersonService {
 
         return toDto(savedPerson);
     }
+
+//    public ResponseEntity<?> userSignup(PersonRegistrationDto personRegistrationDto) {
+//        var person = modelMapper.map(personRegistrationDto, Person.class);
+//        person.setFirstName("null");
+//        person.setLastName("null");
+//        person.setAge(1);
+//        person.setEmail("null");
+//        person.setUserName("null");
+//        person.setLogin(personRegistrationDto.getLogin());
+//        person.setPassword(personRegistrationDto.getPassword());
+//        var savedPerson = personRepository.save(person);
+//        return ResponseEntity.ok(modelMapper.map(savedPerson, PersonRegistrationDto.class));
+//    }
+//
+//    public ResponseEntity<?> userSignin(PersonAuthenticationDto personAuthenticationDto) {
+//        Role userRole = roleRepository.findByName("USER")
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User with Role not found"));
+//
+//        Person person = personRepository.findPersonByLogin(personAuthenticationDto.getLogin())
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+//
+//        if (!person.getRoles().contains((userRole))) {
+//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Please signup!");
+//        } else {
+//            return ResponseEntity.ok(new MessageResponse("Success"));
+//        }
+//    }
+
 
     public PersonDto updatePerson(Integer id, PersonDto personDto) {
 
