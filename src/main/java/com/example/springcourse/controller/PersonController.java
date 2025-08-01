@@ -29,7 +29,7 @@ public class PersonController {
 
 //    @PostMapping("/signup")
 //    public ResponseEntity<?> userSignup(@RequestBody @Valid PersonRegistrationDto personRegistrationDto) {
-//        return ResponseEntity.status(HttpStatus.CREATED).body(personService.userSignup(personRegistrationDto));
+//        return ResponseEntity.status(HttpStatus.CREATED).body(personService.userSignu(personRegistrationDto));
 //    }
 //
 //    @PostMapping("/signin")

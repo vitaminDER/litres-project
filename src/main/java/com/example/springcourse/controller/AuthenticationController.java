@@ -21,7 +21,8 @@ public class AuthenticationController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> userSignup(@RequestBody @Valid PersonRegistrationDto personRegistrationDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(personAuthenticationService.userSignup(personRegistrationDto));
+        personAuthenticationService.userSignup(personRegistrationDto);
+        return ResponseEntity.accepted().build();
     }
 
     @PostMapping("/signin")

@@ -1,5 +1,6 @@
 package com.example.springcourse.dto.person;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -20,4 +21,8 @@ public class PersonRegistrationDto {
     @NotNull(message = "password can't be null")
     @Size(min = 8, message = "password should be 8 characters long minimum")
     private String password;
+
+    @NotBlank
+    @Size(min = 8, message = "password should be 8 characters long minimum")
+    private String confirmPassword;
 }

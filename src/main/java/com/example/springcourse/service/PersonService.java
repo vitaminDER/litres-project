@@ -129,7 +129,7 @@ public class PersonService {
     ReviewPersonDto convertToReviewPersonDto(Review review) {
         var reviewPersonDto = new ReviewPersonDto();
         reviewPersonDto.setPersonId(review.getPerson().getId());
-        reviewPersonDto.setUsername(review.getPerson().getUserName());
+        reviewPersonDto.setUsername(review.getPerson().getUsername());
         reviewPersonDto.setTitle(review.getTitle());
         reviewPersonDto.setComment(review.getComment());
         reviewPersonDto.setEvaluation(review.getEvaluation());
