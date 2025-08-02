@@ -38,9 +38,6 @@ public class PersonAuthenticationService implements UserDetailsService {
         if(personRepository.existsByLogin(personRegistrationDto.getLogin())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User with login already exists");
         }
-        if(!personRegistrationDto.getPassword().equals(personRegistrationDto.getConfirmPassword())) {
-            throw new IllegalArgumentException("Passwords don't match");
-        }
         var person = modelMapper.map(personRegistrationDto, Person.class);
         person.setFirstName("null");
         person.setLastName("null");

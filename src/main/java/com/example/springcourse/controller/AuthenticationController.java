@@ -5,7 +5,6 @@ import com.example.springcourse.dto.person.PersonRegistrationDto;
 import com.example.springcourse.service.PersonAuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,13 +19,13 @@ public class AuthenticationController {
     private final PersonAuthenticationService personAuthenticationService;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> userSignup(@RequestBody @Valid PersonRegistrationDto personRegistrationDto) {
+    public ResponseEntity<?> userSignup(@Valid @RequestBody PersonRegistrationDto personRegistrationDto) {
         personAuthenticationService.userSignup(personRegistrationDto);
         return ResponseEntity.accepted().build();
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> userSigin(@Valid @RequestBody PersonAuthenticationDto personAuthenticationDto) {
+    public ResponseEntity<?> userSignin(@Valid @RequestBody PersonAuthenticationDto personAuthenticationDto) {
         return ResponseEntity.ok(personAuthenticationService.userSignin(personAuthenticationDto));
     }
 }
