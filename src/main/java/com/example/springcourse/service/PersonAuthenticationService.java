@@ -42,7 +42,7 @@ public class PersonAuthenticationService implements UserDetailsService {
         person.setFirstName("null");
         person.setLastName("null");
         person.setAge(1);
-        person.setEmail("null");
+        person.setEmail(personRegistrationDto.getEmail());
         person.setUserName("null");
         person.setLogin(personRegistrationDto.getLogin());
         person.setPassword(passwordEncoder.encode(personRegistrationDto.getPassword()));

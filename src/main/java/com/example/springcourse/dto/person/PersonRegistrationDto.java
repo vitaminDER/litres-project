@@ -21,4 +21,9 @@ public class PersonRegistrationDto {
     @NotNull(message = "password can't be null")
     @Size(min = 8, max = 8, message = "password should be 8 characters long minimum")
     private String password;
+
+    @NotEmpty(message = "email can't be empty")
+    @NotNull(message = "email can't be null")
+    @Email
+    private String email;
 }
