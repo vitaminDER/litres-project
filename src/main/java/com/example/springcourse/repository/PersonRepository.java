@@ -34,4 +34,6 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
 
     @Query("select per from Person per where per.login = :login")
     Optional<Person> findPersonByLogin(String login);
+
+    boolean existsByLogin(String login);
 }
