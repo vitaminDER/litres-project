@@ -47,34 +47,6 @@ public class PersonService {
         return toDto(savedPerson);
     }
 
-//    public ResponseEntity<?> userSignup(PersonRegistrationDto personRegistrationDto) {
-//        var person = modelMapper.map(personRegistrationDto, Person.class);
-//        person.setFirstName("null");
-//        person.setLastName("null");
-//        person.setAge(1);
-//        person.setEmail("null");
-//        person.setUserName("null");
-//        person.setLogin(personRegistrationDto.getLogin());
-//        person.setPassword(personRegistrationDto.getPassword());
-//        var savedPerson = personRepository.save(person);
-//        return ResponseEntity.ok(modelMapper.map(savedPerson, PersonRegistrationDto.class));
-//    }
-//
-//    public ResponseEntity<?> userSignin(PersonAuthenticationDto personAuthenticationDto) {
-//        Role userRole = roleRepository.findByName("USER")
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User with Role not found"));
-//
-//        Person person = personRepository.findPersonByLogin(personAuthenticationDto.getLogin())
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
-//
-//        if (!person.getRoles().contains((userRole))) {
-//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Please signup!");
-//        } else {
-//            return ResponseEntity.ok(new MessageResponse("Success"));
-//        }
-//    }
-
-
     public PersonDto updatePerson(Integer id, PersonDto personDto) {
 
         Person person = personRepository.findPersonById(id);

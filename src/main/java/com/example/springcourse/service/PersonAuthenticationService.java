@@ -32,7 +32,7 @@ public class PersonAuthenticationService implements UserDetailsService {
     private final PersonRepository personRepository;
     private final ModelMapper modelMapper;
     private final RoleRepository roleRepository;
-//    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public void userSignup(PersonRegistrationDto personRegistrationDto) {
         if(personRepository.existsByLogin(personRegistrationDto.getLogin())) {
@@ -45,7 +45,7 @@ public class PersonAuthenticationService implements UserDetailsService {
         person.setEmail("null");
         person.setUserName("null");
         person.setLogin(personRegistrationDto.getLogin());
-        person.setPassword(personRegistrationDto.getPassword());
+        person.setPassword(passwordEncoder.encode(personRegistrationDto.getPassword()));
         var savedPerson = personRepository.save(person);
         modelMapper.map(savedPerson, PersonAuthenticationDto.class);
     }

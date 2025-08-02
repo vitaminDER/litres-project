@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
 @NoArgsConstructor
@@ -12,14 +13,12 @@ public class PersonRegistrationDto {
 
     @NotEmpty(message = "login can't be empty")
     @NotNull(message = "login can't be null")
-    @Min(4)
-    @Max(10)
-    @Pattern(regexp = "[a-zA-Z]")
+    @Size(min = 4, max = 10)
+    @Pattern(regexp = "[a-zA-Z_]+")
     private String login;
 
     @NotEmpty(message = "password can't be empty")
     @NotNull(message = "password can't be null")
-    @Size(min = 8, message = "password should be 8 characters long minimum")
-    @Max(8)
+    @Size(min = 8, max = 8, message = "password should be 8 characters long minimum")
     private String password;
 }
