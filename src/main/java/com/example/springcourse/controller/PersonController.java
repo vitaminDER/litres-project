@@ -27,16 +27,6 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.CREATED).body(personService.savePerson(personDto));
     }
 
-//    @PostMapping("/signup")
-//    public ResponseEntity<?> userSignup(@RequestBody @Valid PersonRegistrationDto personRegistrationDto) {
-//        return ResponseEntity.status(HttpStatus.CREATED).body(personService.userSignup(personRegistrationDto));
-//    }
-//
-//    @PostMapping("/signin")
-//    public ResponseEntity<?> userSigin(@Valid @RequestBody PersonAuthenticationDto personAuthenticationDto) {
-//        return ResponseEntity.ok(personService.userSignin(personAuthenticationDto));
-//    }
-
     @GetMapping("/info/{id}")
     public ResponseEntity<PersonDtoRead> findPersonInfo(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(personService.getPersonInfo(id));

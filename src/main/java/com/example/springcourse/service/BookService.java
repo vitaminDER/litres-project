@@ -148,7 +148,7 @@ public class BookService {
     ReviewBook convertToReviewBookDto(Review review) {
         ReviewBook dto = new ReviewBook();
         dto.setPersonId(review.getPerson().getId());
-        dto.setUsername(review.getPerson().getUserName());
+        dto.setUsername(review.getPerson().getUsername());
         dto.setComment(review.getComment());
         dto.setEvaluation(review.getEvaluation());
         dto.setCreatedDate(review.getCreatedDate());
