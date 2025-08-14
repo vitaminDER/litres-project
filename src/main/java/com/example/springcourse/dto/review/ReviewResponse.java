@@ -14,14 +14,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ReviewResponse {
 
-    private int id;
-
-    private String title;
+    private int reviewId;
 
     private String comment;
 
-    private int evaluation;
-
-    private LocalDate createdDate;
+    private LocalDate date;
 
 }

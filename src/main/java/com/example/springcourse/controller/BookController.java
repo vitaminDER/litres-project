@@ -38,12 +38,12 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewByBook(bookId,pageNumber,pageSize));
     }
 
-    @CrossOrigin
-    @GetMapping("/reviewOnBook")
-    public ResponseEntity<List<ReviewBook>> findReviewOnBookByTitleAndEvaluation(@RequestParam("title") String title,
-                                                                                 @RequestParam("evaluation") Integer evaluation) {
-        return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewWithEvaluation(title, evaluation));
-    }
+//    @CrossOrigin
+//    @GetMapping("/reviewOnBook")
+//    public ResponseEntity<List<ReviewBook>> findReviewOnBookByTitleAndEvaluation(@RequestParam("title") String title,
+//                                                                                 @RequestParam("evaluation") Integer evaluation) {
+//        return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewWithEvaluation(title, evaluation));
+//    }
 
     @CrossOrigin
     @GetMapping("/genre")
@@ -64,11 +64,6 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.updateBook(id, bookCreateDto));
     }
 
-    @CrossOrigin
-    @DeleteMapping("/{id}")
-    public void deleteBook(@PathVariable Integer id) {
-        this.bookService.deleteBook(id);
-    }
 
 
     @CrossOrigin

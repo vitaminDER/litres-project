@@ -31,8 +31,8 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     @Query("SELECT r FROM Review r LEFT JOIN FETCH r.person WHERE r.book.id = :bookId")
     List<Review> findReviewOnBookById(@Param("bookId") Integer bookId);
 
-    @Query("select r from Review r join fetch r.book b where  b.title = :title and r.evaluation = :evaluation")
-    List<Review> findReviewOnBookWithEvaluation(@Param("title") String title, @Param("evaluation") Integer evaluation);
+//    @Query("select r from Review r join fetch r.book b where  b.title = :title and r.evaluation = :evaluation")
+//    List<Review> findReviewOnBookWithEvaluation(@Param("title") String title, @Param("evaluation") Integer evaluation);
 
     @Query("select bk from Book bk join fetch bk.genre g where g.name = :genre")
     List<Book> findBooksByGenre(@Param("genre") String genre);

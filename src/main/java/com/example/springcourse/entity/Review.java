@@ -28,14 +28,10 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "title")
-    private String title;
 
     @Column(name = "comment")
     private String comment;
 
-    @Column(name = "evaluation")
-    private int evaluation;
 
     @Column(name = "created_date")
     @JsonFormat(pattern = "dd-MM-yyyy")

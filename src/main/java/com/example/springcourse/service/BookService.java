@@ -92,22 +92,22 @@ public class BookService {
         );
     }
 
-    @Transactional
-    public List<ReviewBook> findReviewWithEvaluation(String title, Integer evaluation) {
-        List<String> errors = new ArrayList<>();
-        if (title == null || title.isBlank()) {
-            errors.add("Title can't be blank!");
-        }
-        if (evaluation > 5 || evaluation < 1) {
-            errors.add("Evaluation with " + evaluation + " need be more 0 and less 5");
-        }
-        if (!errors.isEmpty()) {
-            throw new BookValidationException("Error validation", errors);
-        }
-        return bookRepository.findReviewOnBookWithEvaluation(title, evaluation).stream()
-                .map(this::convertToReviewBookDto)
-                .collect(Collectors.toList());
-    }
+//    @Transactional
+//    public List<ReviewBook> findReviewWithEvaluation(String title, Integer evaluation) {
+//        List<String> errors = new ArrayList<>();
+//        if (title == null || title.isBlank()) {
+//            errors.add("Title can't be blank!");
+//        }
+//        if (evaluation > 5 || evaluation < 1) {
+//            errors.add("Evaluation with " + evaluation + " need be more 0 and less 5");
+//        }
+//        if (!errors.isEmpty()) {
+//            throw new BookValidationException("Error validation", errors);
+//        }
+//        return bookRepository.findReviewOnBookWithEvaluation(title, evaluation).stream()
+//                .map(this::convertToReviewBookDto)
+//                .collect(Collectors.toList());
+//    }
 
     public List<BookReadDto> showAllBooks(Book book) {
         return bookRepository.findAll(book).stream()
@@ -147,10 +147,10 @@ public class BookService {
 
     ReviewBook convertToReviewBookDto(Review review) {
         ReviewBook dto = new ReviewBook();
-        dto.setPersonId(review.getPerson().getId());
+//        dto.setPersonId(review.getPerson().getId());
         dto.setUsername(review.getPerson().getUsername());
         dto.setComment(review.getComment());
-        dto.setEvaluation(review.getEvaluation());
+//        dto.setEvaluation(review.getEvaluation());
         dto.setCreatedDate(review.getCreatedDate());
         return dto;
     }

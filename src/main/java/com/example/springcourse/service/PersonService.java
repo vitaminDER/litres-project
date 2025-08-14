@@ -49,7 +49,8 @@ public class PersonService {
 
     public PersonDto updatePerson(Integer id, PersonDto personDto) {
 
-        Person person = personRepository.findPersonById(id);
+        Person person = personRepository.findPersonById(id)
+                .orElseThrow(() -> new PersonNotFoundException("Person not found"));
         if (!personRepository.existsById(id)) {
             throw new PersonNotFoundException("Person with id " + id + " not found");
         }
@@ -86,7 +87,8 @@ public class PersonService {
     }
 
     public PersonDtoRead getPersonInfo(Integer id) {
-        Person person = personRepository.findPersonById(id);
+        Person person = personRepository.findPersonById(id)
+                .orElseThrow(() -> new PersonNotFoundException("Person not found"));
         if (!personRepository.existsById(id)) {
             throw new PersonNotFoundException("Person with id " + id + " not found");
         }
@@ -102,9 +104,9 @@ public class PersonService {
         var reviewPersonDto = new ReviewPersonDto();
         reviewPersonDto.setPersonId(review.getPerson().getId());
         reviewPersonDto.setUsername(review.getPerson().getUsername());
-        reviewPersonDto.setTitle(review.getTitle());
+//        reviewPersonDto.setTitle(review.getTitle());
         reviewPersonDto.setComment(review.getComment());
-        reviewPersonDto.setEvaluation(review.getEvaluation());
+//        reviewPersonDto.setEvaluation(review.getEvaluation());
         return reviewPersonDto;
     }
 
