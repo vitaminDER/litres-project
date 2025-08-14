@@ -4,6 +4,7 @@ import com.example.springcourse.dto.person.PersonDto;
 import com.example.springcourse.dto.person.PersonDtoRead;
 import com.example.springcourse.entity.Person;
 import com.example.springcourse.entity.Review;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.NativeQuery;
 import org.springframework.data.jpa.repository.Query;
@@ -19,7 +20,7 @@ import java.util.Optional;
 public interface PersonRepository extends JpaRepository<Person, Integer> {
 
     @Query("select per from Person per where per.id = :id")
-    Person findPersonById(Integer id);
+    Optional<Person> findPersonById(Integer id);
 
     @Query("select per from Person per where per.userName = :username")
     Person findByUserName(@Param("username") String username);
@@ -34,6 +35,9 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
 
     @Query("select per from Person per where per.login = :login")
     Optional<Person> findPersonByLogin(String login);
+
+    @Query("SELECT p FROM Person p WHERE p.login = :login")
+    Optional<Person> findByLogin(String login);
 
     boolean existsByLogin(String login);
 }

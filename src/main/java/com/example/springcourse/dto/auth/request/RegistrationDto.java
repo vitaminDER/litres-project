@@ -1,15 +1,14 @@
-package com.example.springcourse.dto.person;
+package com.example.springcourse.dto.auth.request;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PersonRegistrationDto {
+public class RegistrationDto {
 
     @NotEmpty(message = "login can't be empty")
     @NotNull(message = "login can't be null")

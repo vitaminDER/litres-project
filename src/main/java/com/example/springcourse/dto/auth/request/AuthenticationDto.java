@@ -1,4 +1,4 @@
-package com.example.springcourse.dto.person;
+package com.example.springcourse.dto.auth.request;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PersonAuthenticationDto {
+public class AuthenticationDto {
 
     @NotNull(message = "login can't be null")
     private String login;
 
     @NotNull(message = "password can't be null")
-    @Size(min = 8, message = "password should be 8 characters long minimum")
+    @Size(min = 8, max = 8, message = "password should be 8 characters long minimum")
     private String password;
 }
