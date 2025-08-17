@@ -8,17 +8,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReviewRequest {
 
-    private int bookId;
+    private UUID bookId;
 
-    private int personId;
+    private UUID personId;
 
-    @Size(min = 120, max = 3000)
+    @Size(min = 10, max = 3000)
     private String comment;
 
 

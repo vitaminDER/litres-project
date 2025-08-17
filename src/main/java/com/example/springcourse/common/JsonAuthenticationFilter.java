@@ -1,4 +1,4 @@
-package com.example.springcourse.dto.common;
+package com.example.springcourse.common;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

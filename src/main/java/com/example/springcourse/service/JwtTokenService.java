@@ -12,8 +12,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.io.StringReader;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -67,7 +70,7 @@ public class JwtTokenService {
                 expirationMs);
     }
 
-    public String generateToken(UserDetails userDetails, Integer personId) {
+    public String generateToken(UserDetails userDetails, UUID personId) {
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .claim("roles", getRoles(userDetails))
@@ -78,7 +81,7 @@ public class JwtTokenService {
                 .compact();
     }
 
-    private List<String> getRoles( UserDetails userDetails) {
+    private List<String> getRoles(UserDetails userDetails) {
         return userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
@@ -100,6 +103,7 @@ public class JwtTokenService {
             throw new JwtException("Invalid token", e);
         }
     }
+
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
@@ -107,24 +111,25 @@ public class JwtTokenService {
         }
         return null;
     }
+
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = parseToken(token).getBody();
         return claimsResolver.apply(claims);
     }
 
     // Извлечение конкретного personId
-    public Integer extractPersonId(String token) {
-        if (!validateToken(token)) {
-            throw new JwtException("Invalid token");
-        }
-        return extractClaim(token, claims -> claims.get("personId", Integer.class));
+    public UUID extractPersonId(String token) {
+        // Сначала извлекаем как строку
+        String idString = extractClaim(token, claims -> claims.get("personId", String.class));
+        // Затем преобразуем в UUID
+        return UUID.fromString(idString);
     }
 
     public String getUsernameFromToken(String token) {
         return parseToken(token).getBody().getSubject();
     }
 
-    public Claims getAllClaimsFromToken( String token) {
+    public Claims getAllClaimsFromToken(String token) {
         return parseToken(token).getBody();
     }
 
@@ -134,12 +139,42 @@ public class JwtTokenService {
                 .build()
                 .parseClaimsJws(token);
     }
-    public String extractRoleFromToken(String token) {
-        Claims claims = parseToken(token).getBody();
-        Object roles = claims.get("roles");
-        if (roles instanceof String) return (String) roles;
-        if (roles instanceof List) return ((List<?>) roles).get(0).toString();
-        return null;
-    }
 
+    public String extractRoleFromToken(String token) {
+        try {
+            // Извлекаем список ролей из токена
+            List<String> roles = extractClaim(token, claims -> {
+                Object rolesClaim = claims.get("roles");
+
+                // Если claim отсутствует
+                if (rolesClaim == null) {
+                    return Collections.emptyList();
+                }
+
+                // Если это строка (одиночная роль)
+                if (rolesClaim instanceof String) {
+                    return Collections.singletonList((String) rolesClaim);
+                }
+
+                // Если это список
+                if (rolesClaim instanceof List) {
+                    return (List<String>) rolesClaim;
+                }
+
+                // Неподдерживаемый формат
+                return Collections.emptyList();
+            });
+
+            // Проверяем наличие ролей
+            if (roles.isEmpty()) {
+                log.warn("No roles found in token");
+                return "ROLE_GUEST"; // Возвращаем роль по умолчанию
+            }
+
+            return roles.get(0); // Возвращаем первую роль
+        } catch (Exception e) {
+            log.error("Error extracting role from token: {}", e.getMessage());
+            throw new JwtException("Error extracting role from token", e);
+        }
+    }
 }

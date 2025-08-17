@@ -1,5 +1,6 @@
-package com.example.springcourse.entity;
+package com.example.springcourse.entity.genre;
 
+import com.example.springcourse.entity.Book;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -16,10 +18,11 @@ import java.util.List;
 public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private UUID id;
 
-    @Column(name = "name")
-    private String name;
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "genre_book")
+    private EGenre name;
 
     @ManyToMany(mappedBy = "genre", fetch = FetchType.LAZY)
     @JsonBackReference

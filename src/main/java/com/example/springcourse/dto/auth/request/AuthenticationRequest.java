@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthenticationDto {
+public class AuthenticationRequest {
 
     @NotNull(message = "login can't be null")
     private String login;

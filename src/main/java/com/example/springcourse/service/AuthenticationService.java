@@ -1,19 +1,15 @@
 package com.example.springcourse.service;
 
 import com.example.springcourse.config.JwtConfig;
-import com.example.springcourse.dto.auth.request.AuthenticationDto;
-import com.example.springcourse.dto.auth.request.RegistrationDto;
+import com.example.springcourse.dto.auth.request.AuthenticationRequest;
+import com.example.springcourse.dto.auth.request.RegistrationRequest;
 import com.example.springcourse.dto.auth.response.AuthenticationResponse;
-import com.example.springcourse.dto.auth.response.JwtResponse;
 import com.example.springcourse.dto.auth.response.RegistrationResponse;
 import com.example.springcourse.entity.Person;
 import com.example.springcourse.entity.role.Role;
-import com.example.springcourse.entity.token.RefreshToken;
 import com.example.springcourse.repository.PersonRepository;
-import com.example.springcourse.repository.RefreshTokenRepository;
 import com.example.springcourse.repository.RoleRepository;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -31,12 +27,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.crypto.SecretKey;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -49,41 +42,49 @@ public class AuthenticationService implements UserDetailsService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenService jwtTokenService;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final JwtConfig jwtConfig;
 
-    public ResponseEntity<RegistrationResponse> userSignup(RegistrationDto registrationDto) {
-        System.out.println(registrationDto);
-        if (personRepository.existsByLogin(registrationDto.getLogin())) {
+    public ResponseEntity<RegistrationResponse> userSignup(RegistrationRequest registrationRequest) {
+
+        if (personRepository.existsByLogin(registrationRequest.getLogin())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User with login already exists");
         }
-        var person = modelMapper.map(registrationDto, Person.class);
+
+        var person = new Person();
+        person.setLogin(registrationRequest.getLogin());
+        person.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
+        person.setEmail(registrationRequest.getEmail());
         person.setFirstName("");
         person.setLastName("");
-        person.setAge(1);
-        person.setEmail(registrationDto.getEmail());
+        person.setBirthDate("");
+        person.setEmail(registrationRequest.getEmail());
         person.setUserName("");
-        person.setLogin(registrationDto.getLogin());
-        person.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
-        var savedPerson = personRepository.save(person);
-        modelMapper.map(savedPerson, AuthenticationDto.class);
+
+        Role userRole = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new RuntimeException("Role ROLE_USER not found in database"));
+        person.getRoles().add(userRole);
+
+        person = personRepository.save(person);
+
+        modelMapper.map(person, RegistrationRequest.class);
         return ResponseEntity.status(HttpStatus.CREATED).body(new RegistrationResponse());
     }
 
     @Transactional
-    public ResponseEntity<AuthenticationResponse> userSignin(AuthenticationDto authenticationDto) {
+    public ResponseEntity<AuthenticationResponse> userSignin(AuthenticationRequest authenticationRequest) {
 
         try {
-            UserDetails userDetails = loadUserByUsername(authenticationDto.getLogin());
-            if (!passwordEncoder.matches(authenticationDto.getPassword(), userDetails.getPassword())) {
+            UserDetails userDetails = loadUserByUsername(authenticationRequest.getLogin());
+            if (!passwordEncoder.matches(authenticationRequest.getPassword(), userDetails.getPassword())) {
                 throw new BadCredentialsException("Invalid password");
             }
             Person person = ((PersonUserDetails) userDetails).getPerson();
-            Integer personId = ((PersonUserDetails) userDetails).getPerson().getId();
+            UUID personId = ((PersonUserDetails) userDetails).getPerson().getId();
+
 
             String token = jwtTokenService.generateToken(userDetails, personId);
 
-            AuthenticationResponse response = new AuthenticationResponse();
+            var response = new AuthenticationResponse();
             response.setUserName(person.getUsername());
             response.setId(person.getId());
             response.setFirstName(person.getFirstName());
@@ -101,7 +102,7 @@ public class AuthenticationService implements UserDetailsService {
         }
 
     }
-    public AuthenticationResponse getUserInfo(Integer personId) {
+    public AuthenticationResponse getUserInfo(UUID personId) {
         Person person = personRepository.findById(personId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + personId));
 
@@ -118,7 +119,7 @@ public class AuthenticationService implements UserDetailsService {
                 return errorResponse;
             }
 
-            Integer personId = jwtTokenService.extractPersonId(token);
+            UUID personId = jwtTokenService.extractPersonId(token);
             if (personId == null) {
                 return errorResponse;
             }

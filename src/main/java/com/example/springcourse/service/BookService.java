@@ -1,14 +1,15 @@
 package com.example.springcourse.service;
 
-import com.example.springcourse.dto.book.BookCreateDto;
-import com.example.springcourse.dto.book.BookDto;
-import com.example.springcourse.dto.book.BookReadDto;
-import com.example.springcourse.dto.review.ReviewBook;
+import com.example.springcourse.dto.book.BookResponse;
+import com.example.springcourse.dto.book.BookRequest;
+import com.example.springcourse.dto.book.AllBookResponse;
+import com.example.springcourse.dto.review.ReviewBookResponse;
 import com.example.springcourse.entity.Book;
 import com.example.springcourse.entity.Review;
+import com.example.springcourse.entity.genre.Genre;
 import com.example.springcourse.exception.BookNotFoundException;
-import com.example.springcourse.exception.BookValidationException;
 import com.example.springcourse.repository.BookRepository;
+import com.example.springcourse.repository.GenreRepository;
 import com.example.springcourse.repository.ReviewRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -24,6 +25,7 @@ import com.example.springcourse.dto.page.PageDto;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,23 +36,40 @@ public class BookService {
     private final BookRepository bookRepository;
     private final ReviewRepository reviewRepository;
     private final ModelMapper modelMapper;
+    private final GenreRepository genreRepository;
 
 
-    public BookCreateDto saveBook(BookDto bookDto) {
+    public void saveBook(BookRequest bookRequest) {
+        List<Genre> genres = genreRepository.findAllById(bookRequest.getGenreId());
 
-        if (bookDto == null) {
-            log.info("Attempt to save null book");
-            throw new IllegalArgumentException("Book can't be null");
-        }
+        var book = new Book();
+        book.setTitle(bookRequest.getTitle());
+        book.setAuthor(bookRequest.getAuthor());
+        book.setYear(bookRequest.getYear());
+        book.setDescription(bookRequest.getDescription());
+        book.setGenre(new ArrayList<>(genres));
+        book.setImage(bookRequest.getImage());
 
-        Book book = modelMapper.map(bookDto, Book.class);
         Book savedBook = bookRepository.save(book);
         log.info("Book saved successfully with ID: {}", savedBook.getId());
-
-        return modelMapper.map(savedBook, BookCreateDto.class);
     }
 
-    public BookCreateDto updateBook(Integer id, BookCreateDto bookDto) {
+
+
+    public BookRequest convertBookToDto(Book book) {
+        var dto = new BookRequest();
+        dto.setTitle(book.getTitle());
+        dto.setAuthor(book.getAuthor());
+        dto.setYear(book.getYear());
+        dto.setDescription(book.getDescription());
+        dto.setImage(book.getImage());
+        dto.setGenreId(book.getGenre().stream()
+                .map(Genre::getId)
+                .collect(Collectors.toList()));
+        return dto;
+    }
+
+    public BookResponse updateBook(UUID id, BookResponse bookDto) {
         Book book = bookRepository.findBookById(id);
         if (book == null) {
             throw new IllegalArgumentException("Book can't be null");
@@ -62,21 +81,29 @@ public class BookService {
 
         Book updatedBook = bookRepository.save(book);
 
-        return modelMapper.map(updatedBook, BookCreateDto.class);
+        return modelMapper.map(updatedBook, BookResponse.class);
     }
 
     @Transactional
-    public BookDto findBook(Integer id) {
+    public BookResponse findBook(UUID id) {
+
         Book book = bookRepository.findBookById(id);
-        averageRatingBook(id);
-        if (!bookRepository.existsById(id)) {
-            throw new BookNotFoundException("Book with id " + id + " not found");
+        if(book == null) {
+            throw new BookNotFoundException("Book with id"+ id +" not found");
         }
-        return toDto(book);
+
+        averageRatingBook(id);
+
+        BookResponse response = modelMapper.map(book, BookResponse.class);
+        response.setGenre(book.getGenre().stream()
+                .map(genre -> modelMapper.map(genre, Genre.class))
+                .collect(Collectors.toList()));
+
+        return response;
     }
 
     @Transactional
-    public PageDto<ReviewBook> findReviewByBook(Integer bookId, int pageNumber, int pageSize) {
+    public PageDto<ReviewBookResponse> findReviewByBook(UUID bookId, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
         Page<Review> pageReviews = reviewRepository.findAllReviewsByBook(bookId, pageable);
         if (!bookRepository.existsById(bookId)) {
@@ -109,33 +136,33 @@ public class BookService {
 //                .collect(Collectors.toList());
 //    }
 
-    public List<BookReadDto> showAllBooks(Book book) {
+    public List<AllBookResponse> showAllBooks(Book book) {
         return bookRepository.findAll(book).stream()
-                .map(book1 -> modelMapper.map(book1, BookReadDto.class))
+                .map(book1 -> modelMapper.map(book1, AllBookResponse.class))
                 .collect(Collectors.toList());
     }
 
-    public List<BookDto> findBookByGenre(String genre) {
+    public List<BookRequest> findBookByGenre(String genre) {
         return bookRepository.findBooksByGenre(genre)
                 .stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
-    public BookDto findBookByTitle(String title) {
+    public BookRequest findBookByTitle(String title) {
         Book book = bookRepository.findBookByTitle(title);
         return toDto(book);
     }
 
 
-    public void deleteBook(Integer id) {
+    public void deleteBook(UUID id) {
         if (!bookRepository.existsById(id)) {
             throw new EntityNotFoundException("Запись с ID " + id + " не найдена");
         }
         this.bookRepository.deleteById(id);
     }
 
-    public void averageRatingBook(Integer id) {
+    public void averageRatingBook(UUID id) {
         Double averageRating = bookRepository.calculateAverageRatingBook(id);
         if (averageRating == null) {
             averageRating = 0.0;
@@ -145,8 +172,8 @@ public class BookService {
         bookRepository.save(book);
     }
 
-    ReviewBook convertToReviewBookDto(Review review) {
-        ReviewBook dto = new ReviewBook();
+    ReviewBookResponse convertToReviewBookDto(Review review) {
+        ReviewBookResponse dto = new ReviewBookResponse();
 //        dto.setPersonId(review.getPerson().getId());
         dto.setUsername(review.getPerson().getUsername());
         dto.setComment(review.getComment());
@@ -156,8 +183,8 @@ public class BookService {
     }
 
 
-    BookDto toDto(Book book) {
-        return modelMapper.map(book, BookDto.class);
+    BookRequest toDto(Book book) {
+        return modelMapper.map(book, BookRequest.class);
     }
 
 }

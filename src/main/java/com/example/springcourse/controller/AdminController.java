@@ -1,9 +1,15 @@
 package com.example.springcourse.controller;
 
+import com.example.springcourse.dto.book.BookRequest;
 import com.example.springcourse.service.BookService;
 import com.example.springcourse.service.ReviewService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,13 +20,18 @@ public class AdminController {
     private final BookService bookService;
 
 
-    @DeleteMapping("/review/{id}")
-    public void deleteReview(@PathVariable Integer id) {
-        this.reviewService.deleteReviewById(id);
-    }
     @CrossOrigin
     @DeleteMapping("/book/{id}")
-    public void deleteBook(@PathVariable Integer id) {
+    public void deleteBook(@PathVariable UUID id) {
         this.bookService.deleteBook(id);
     }
+
+    @CrossOrigin
+    @PostMapping("/book")
+    public ResponseEntity<?> createBook(@RequestBody @Valid BookRequest bookRequest) {
+      bookService.saveBook(bookRequest);
+      return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+
 }

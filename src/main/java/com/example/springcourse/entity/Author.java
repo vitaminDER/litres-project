@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.apache.catalina.LifecycleState;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "author")
@@ -19,7 +20,7 @@ public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private UUID id;
 
     @Column(name = "name")
     private String name;
@@ -27,8 +28,8 @@ public class Author {
     @Column(name = "biography")
     private String biography;
 
-    @OneToMany(mappedBy = "authorBooks")
-    @JsonManagedReference
-    List<Book> booksAuthor;
+//    @OneToMany(mappedBy = "authorBooks")
+//    @JsonManagedReference
+//    List<Book> booksAuthor;
 
 }

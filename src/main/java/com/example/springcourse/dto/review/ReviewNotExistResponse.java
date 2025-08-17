@@ -1,23 +1,25 @@
 package com.example.springcourse.dto.review;
 
-import com.example.springcourse.entity.Review;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewBook {
+public class ReviewNotExistResponse {
 
+    private String bookId;
 
-    private String username;
+    private String personId;
+
+    private String reviewId;
 
     private String comment;
 
-    private LocalDate createdDate;
+    private String date;
 
 }

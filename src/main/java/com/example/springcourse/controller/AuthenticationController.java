@@ -1,7 +1,7 @@
 package com.example.springcourse.controller;
 
-import com.example.springcourse.dto.auth.request.AuthenticationDto;
-import com.example.springcourse.dto.auth.request.RegistrationDto;
+import com.example.springcourse.dto.auth.request.AuthenticationRequest;
+import com.example.springcourse.dto.auth.request.RegistrationRequest;
 import com.example.springcourse.dto.auth.response.AuthenticationResponse;
 import com.example.springcourse.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,14 +24,14 @@ public class AuthenticationController {
 
     @CrossOrigin
     @PostMapping("/signup")
-    public ResponseEntity<?> userSignup(@Valid @RequestBody RegistrationDto registrationDto) {
-        return authenticationService.userSignup(registrationDto);
+    public ResponseEntity<?> userSignup(@Valid @RequestBody RegistrationRequest registrationRequest) {
+        return authenticationService.userSignup(registrationRequest);
     }
 
     @CrossOrigin
     @PostMapping("/signin")
-    public ResponseEntity<AuthenticationResponse> userSignin(@Valid @RequestBody AuthenticationDto authenticationDto) {
-        return authenticationService.userSignin(authenticationDto);
+    public ResponseEntity<AuthenticationResponse> userSignin(@Valid @RequestBody AuthenticationRequest authenticationRequest) {
+        return authenticationService.userSignin(authenticationRequest);
     }
 
     @CrossOrigin

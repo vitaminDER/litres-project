@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -28,12 +29,12 @@ public class PersonController {
     }
 
     @GetMapping("/info/{id}")
-    public ResponseEntity<PersonDtoRead> findPersonInfo(@PathVariable Integer id) {
+    public ResponseEntity<PersonDtoRead> findPersonInfo(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(personService.getPersonInfo(id));
     }
 
     @GetMapping("/review/{id}")
-    public ResponseEntity<List<ReviewPersonDto>> findPersonReview(@PathVariable Integer id) {
+    public ResponseEntity<List<ReviewPersonDto>> findPersonReview(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(personService.getReviewPerson(id));
     }
 
@@ -44,14 +45,14 @@ public class PersonController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PersonDto> updatePerson(@PathVariable Integer id,
+    public ResponseEntity<PersonDto> updatePerson(@PathVariable UUID id,
                                                   @RequestBody PersonDto personDto) {
         return ResponseEntity.status(HttpStatus.OK).body(personService.updatePerson(id, personDto));
 
     }
 
     @DeleteMapping("{id}")
-    public void deletePerson(@PathVariable Integer id) {
+    public void deletePerson(@PathVariable UUID id) {
         this.personService.deletePerson(id);
     }
 

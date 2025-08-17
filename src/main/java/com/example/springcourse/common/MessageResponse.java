@@ -1,4 +1,4 @@
-package com.example.springcourse.dto.common;
+package com.example.springcourse.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

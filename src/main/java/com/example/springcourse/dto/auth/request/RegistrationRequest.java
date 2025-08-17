@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegistrationDto {
+public class RegistrationRequest {
 
     @NotEmpty(message = "login can't be empty")
     @NotNull(message = "login can't be null")
