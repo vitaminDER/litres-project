@@ -15,12 +15,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface PersonRepository extends JpaRepository<Person, Integer> {
+public interface PersonRepository extends JpaRepository<Person, UUID> {
 
     @Query("select per from Person per where per.id = :id")
-    Optional<Person> findPersonById(Integer id);
+    Optional<Person> findPersonById(UUID id);
 
     @Query("select per from Person per where per.userName = :username")
     Person findByUserName(@Param("username") String username);
@@ -29,7 +30,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
     Person findPersonFavouriteBooks(@Param("username") String username);
 
     @Query("select r from Review r left join fetch r.person where r.person.id = :personId")
-    List<Review> findPersonReviewById(@Param("personId") Integer personId);
+    List<Review> findPersonReviewById(@Param("personId") UUID personId);
     @NativeQuery("Select * From Person")
     List<Person> findAllPerson(Person person);
 

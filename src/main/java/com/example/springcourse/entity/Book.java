@@ -1,18 +1,17 @@
 package com.example.springcourse.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.example.springcourse.entity.genre.Genre;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "book")
@@ -23,7 +22,7 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private UUID id;
 
     @Column(name = "title")
     private String title;
@@ -32,13 +31,13 @@ public class Book {
     private String author;
 
     @Column(name = "year")
-    private int year;
+    private String year;
 
     @Column(name = "description")
     private String description;
 
     @Column(name = "rating")
-    private BigDecimal rating;
+    private BigDecimal rating = BigDecimal.ZERO;
 
     @Column(name = "image")
     private String image;
@@ -51,13 +50,13 @@ public class Book {
     List<Genre> genre;
 
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "author_id", referencedColumnName = "id")
-    @JsonBackReference
-    Author authorBooks;
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "author_book", referencedColumnName = "id")
+//    @JsonBackReference
+//    Author authorBooks;
 
     @OneToMany(mappedBy = "book",fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonManagedReference("book-reviews")
     List<Review> review;
 
     @ManyToMany(mappedBy = "favouriteBooks", fetch = FetchType.LAZY)

@@ -1,7 +1,6 @@
 package com.example.springcourse.entity;
 
 import com.example.springcourse.entity.role.Role;
-import com.example.springcourse.entity.token.RefreshToken;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -14,9 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -29,7 +26,7 @@ public class Person implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private UUID id;
 
     @Column(name = "first_name")
     private String firstName;
@@ -37,9 +34,8 @@ public class Person implements UserDetails {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "age")
-    @Min(value = 1)
-    private int age;
+    @Column(name = "birth_date")
+    private String birthDate;
 
     @Column(name = "email")
     private String email;
@@ -68,10 +64,7 @@ public class Person implements UserDetails {
     @JoinTable(name = "person_role",
             joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    List<Role> roles;
-
-    @OneToMany(mappedBy = "person")
-    List<RefreshToken> refreshTokens;
+    List<Role> roles = new ArrayList<>();
 
 
     @Override

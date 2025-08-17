@@ -1,23 +1,19 @@
 package com.example.springcourse.service;
 
-import com.example.springcourse.dto.common.MessageResponse;
 import com.example.springcourse.dto.person.*;
 import com.example.springcourse.dto.review.ReviewPersonDto;
 import com.example.springcourse.entity.Person;
 import com.example.springcourse.entity.Review;
-import com.example.springcourse.entity.role.Role;
 import com.example.springcourse.exception.PersonNotFoundException;
 import com.example.springcourse.repository.PersonRepository;
 import com.example.springcourse.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -35,10 +31,10 @@ public class PersonService {
             log.info("Attempt to save null person");
             throw new IllegalArgumentException("Person can't be NULL!");
         }
-        if (personDto.getAge() < 0) {
-            log.info("Attempt to save person with negative age: {}", personDto.getAge());
-            throw new IllegalArgumentException("Person age can't be less 0");
-        }
+//        if (personDto.getAge() < 0) {
+//            log.info("Attempt to save person with negative age: {}", personDto.getAge());
+//            throw new IllegalArgumentException("Person age can't be less 0");
+//        }
 
         Person person = modelMapper.map(personDto, Person.class);
         Person savedPerson = personRepository.save(person);
@@ -47,7 +43,7 @@ public class PersonService {
         return toDto(savedPerson);
     }
 
-    public PersonDto updatePerson(Integer id, PersonDto personDto) {
+    public PersonDto updatePerson(UUID id, PersonDto personDto) {
 
         Person person = personRepository.findPersonById(id)
                 .orElseThrow(() -> new PersonNotFoundException("Person not found"));
@@ -70,14 +66,14 @@ public class PersonService {
                 .collect(Collectors.toList());
     }
 
-    public void deletePerson(Integer id) {
+    public void deletePerson(UUID id) {
         if (!personRepository.existsById(id)) {
             throw new PersonNotFoundException("Person with id " + id + " not found");
         }
         this.personRepository.deleteById(id);
     }
 
-    public List<ReviewPersonDto> getReviewPerson(Integer id) {
+    public List<ReviewPersonDto> getReviewPerson(UUID id) {
         if (!personRepository.existsById(id)) {
             throw new PersonNotFoundException("Person with id " + id + " not found");
         }
@@ -86,7 +82,7 @@ public class PersonService {
                 .collect(Collectors.toList());
     }
 
-    public PersonDtoRead getPersonInfo(Integer id) {
+    public PersonDtoRead getPersonInfo(UUID id) {
         Person person = personRepository.findPersonById(id)
                 .orElseThrow(() -> new PersonNotFoundException("Person not found"));
         if (!personRepository.existsById(id)) {

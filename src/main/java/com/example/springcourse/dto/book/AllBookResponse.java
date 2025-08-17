@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookReadDto {
+public class AllBookResponse {
 
-    private int id;
+    private UUID id;
     private String title;
     private String author;
     private String image;
