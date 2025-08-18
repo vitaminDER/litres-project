@@ -111,8 +111,6 @@ public class ReviewService {
 
         ReviewNotExistResponse reviewNotExistResponse = new ReviewNotExistResponse();
 
-        Person person = new Person();
-
         if (reviewOpt.isPresent()) {
             Review review = reviewOpt.get();
             reviewResponse.setBookId(review.getBook().getId());
