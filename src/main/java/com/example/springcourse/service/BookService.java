@@ -5,11 +5,13 @@ import com.example.springcourse.dto.book.BookRequest;
 import com.example.springcourse.dto.book.AllBookResponse;
 import com.example.springcourse.dto.review.ReviewBookResponse;
 import com.example.springcourse.entity.Book;
+import com.example.springcourse.entity.Person;
 import com.example.springcourse.entity.Review;
 import com.example.springcourse.entity.genre.Genre;
 import com.example.springcourse.exception.BookNotFoundException;
 import com.example.springcourse.repository.BookRepository;
 import com.example.springcourse.repository.GenreRepository;
+import com.example.springcourse.repository.PersonRepository;
 import com.example.springcourse.repository.ReviewRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -21,10 +23,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.example.springcourse.dto.page.PageDto;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -37,6 +41,7 @@ public class BookService {
     private final ReviewRepository reviewRepository;
     private final ModelMapper modelMapper;
     private final GenreRepository genreRepository;
+    private final PersonRepository personRepository;
 
 
     public void saveBook(BookRequest bookRequest) {
@@ -111,7 +116,7 @@ public class BookService {
         }
         return new PageDto<>(
                 pageReviews.getContent().stream()
-                        .map(this::convertToReviewBookDto)
+                        .map(this::convertToReviewBookResponse)
                         .collect(Collectors.toList()),
                 pageReviews.getNumber()+1,
                 pageReviews.getSize(),
@@ -172,12 +177,15 @@ public class BookService {
         bookRepository.save(book);
     }
 
-    ReviewBookResponse convertToReviewBookDto(Review review) {
+    ReviewBookResponse convertToReviewBookResponse(Review review) {
+        Person person = Optional.ofNullable(review.getPerson())
+                .orElseThrow(() -> new IllegalStateException("Review has no associated person"));
+
         ReviewBookResponse dto = new ReviewBookResponse();
-//        dto.setPersonId(review.getPerson().getId());
-        dto.setUsername(review.getPerson().getUsername());
+        dto.setUsername(StringUtils.hasText(person.getUsername())
+                ? person.getUsername()
+                : person.getLogin());
         dto.setComment(review.getComment());
-//        dto.setEvaluation(review.getEvaluation());
         dto.setCreatedDate(review.getCreatedDate());
         return dto;
     }

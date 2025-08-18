@@ -28,7 +28,7 @@ public class ReviewController {
     }
 
     @GetMapping()
-    public ResponseEntity<?> findReview(@RequestParam("bookId") UUID bookId,
+    public ResponseEntity<?> findReviewPersonByBook(@RequestParam("bookId") UUID bookId,
                                         @RequestParam("personId") UUID personId) {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.findReviewByPersonIdAndBookId(bookId, personId));
     }
