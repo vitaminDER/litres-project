@@ -1,20 +1,16 @@
-package com.example.springcourse.dto.review;
+package com.example.springcourse.dto.review.request;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReviewRequest {
+public class ReviewUpdateRequest {
 
     private UUID bookId;
 
@@ -23,5 +19,5 @@ public class ReviewRequest {
     @Size(min = 10, max = 3000)
     private String comment;
 
-
+    private UUID reviewId;
 }

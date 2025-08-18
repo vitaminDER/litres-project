@@ -1,7 +1,8 @@
 package com.example.springcourse.controller;
 
-import com.example.springcourse.dto.review.ReviewRequest;
-import com.example.springcourse.dto.review.ReviewResponse;
+import com.example.springcourse.dto.review.request.ReviewRequest;
+import com.example.springcourse.dto.review.response.ReviewResponse;
+import com.example.springcourse.dto.review.request.ReviewUpdateRequest;
 import com.example.springcourse.service.ReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class ReviewController {
 
     @GetMapping()
     public ResponseEntity<?> findReviewPersonByBook(@RequestParam("bookId") UUID bookId,
-                                        @RequestParam("personId") UUID personId) {
+                                                    @RequestParam("personId") UUID personId) {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.findReviewByPersonIdAndBookId(bookId, personId));
     }
 
@@ -39,9 +40,8 @@ public class ReviewController {
     }
 
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<ReviewRequest> updateReview(@PathVariable UUID id,
-//                                                      @Valid @RequestBody ReviewRequest reviewRequest) {
-//        return ResponseEntity.status(HttpStatus.OK).body(reviewService.updateReview(id, reviewRequest));
-//    }
+    @PutMapping()
+    public ResponseEntity<ReviewResponse> updateReview(@RequestBody @Valid ReviewUpdateRequest updateRequest) {
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.updateReview(updateRequest));
+    }
 }
