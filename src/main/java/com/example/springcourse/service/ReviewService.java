@@ -1,8 +1,11 @@
 package com.example.springcourse.service;
 
-import com.example.springcourse.dto.review.*;
+import com.example.springcourse.dto.review.request.ReviewRequest;
+import com.example.springcourse.dto.review.request.ReviewUpdateRequest;
+import com.example.springcourse.dto.review.response.ReviewNotExistResponse;
+import com.example.springcourse.dto.review.response.ReviewPersonResponse;
+import com.example.springcourse.dto.review.response.ReviewResponse;
 import com.example.springcourse.entity.Book;
-import java.nio.file.AccessDeniedException;
 import com.example.springcourse.entity.Person;
 import com.example.springcourse.entity.Review;
 import com.example.springcourse.exception.*;
@@ -15,12 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.nio.channels.AcceptPendingException;
-import java.nio.file.AccessDeniedException;
-import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -89,12 +88,19 @@ public class ReviewService {
         }
     }
 
-//    public ReviewRequest updateReview(UUID id, ReviewRequest reviewRequest) {
-//        Review review = reviewRepository.findReviewById(id);
-//        modelMapper.map(reviewRequest, review);
-//        Review updatedReview = reviewRepository.save(review);
-//        return modelMapper.map(updatedReview, ReviewRequest.class);
-//    }
+    public ReviewResponse updateReview(ReviewUpdateRequest updateRequest) {
+        UUID reviewId = updateRequest.getReviewId();
+
+        Review review = reviewRepository.findReviewById(reviewId)
+                .orElseThrow(() -> new ReviewNotFoundException("Review not found"));
+
+        if(updateRequest.getComment() != null && !updateRequest.getComment().isEmpty()) {
+            review.setComment(updateRequest.getComment());
+        }
+
+        Review updatedReview = reviewRepository.save(review);
+        return modelMapper.map(updatedReview, ReviewResponse.class);
+    }
 
     public Object findReviewByPersonIdAndBookId(UUID bookId, UUID personId) {
 

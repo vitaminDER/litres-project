@@ -1,4 +1,4 @@
-package com.example.springcourse.dto.review;
+package com.example.springcourse.dto.review.response;
 
 import com.example.springcourse.entity.Review;
 import lombok.AllArgsConstructor;

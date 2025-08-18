@@ -3,7 +3,7 @@ package com.example.springcourse.controller;
 import com.example.springcourse.dto.book.BookResponse;
 import com.example.springcourse.dto.book.BookRequest;
 import com.example.springcourse.dto.book.AllBookResponse;
-import com.example.springcourse.dto.review.ReviewBookResponse;
+import com.example.springcourse.dto.review.response.ReviewBookResponse;
 import com.example.springcourse.entity.Book;
 import com.example.springcourse.service.BookService;
 import lombok.RequiredArgsConstructor;
