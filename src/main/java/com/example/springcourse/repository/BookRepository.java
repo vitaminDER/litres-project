@@ -2,6 +2,9 @@ package com.example.springcourse.repository;
 
 import com.example.springcourse.entity.Book;
 import com.example.springcourse.entity.Review;
+import com.example.springcourse.entity.TypeSearch;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.NativeQuery;
 import org.springframework.data.jpa.repository.Query;
@@ -33,6 +36,16 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
     @NativeQuery("select avg(rating) from book_rating where book_id = :id")
     Double calculateAverageRatingBook(@Param("id") UUID id);
 
+    @Query("""
+            SELECT b FROM Book b
+              WHERE
+              (:searchValue IS NULL OR :searchValue = '') OR
+              (:typeSearch = 'TITLE' AND LOWER(b.title) LIKE LOWER(CONCAT('%', :searchValue, '%'))) OR
+              (:typeSearch = 'AUTHOR' AND LOWER(b.author) LIKE LOWER(CONCAT('%', :searchValue, '%'))) OR
+              (:typeSearch = 'ISBN' AND LOWER(b.isbn) LIKE LOWER(CONCAT('%', :searchValue, '%')))
+            """)
+    Page<Book> searchBooks(@Param("searchValue") String searchValue,
+                           @Param("typeSearch") String typeSearch, Pageable pageable);
 }
 
 

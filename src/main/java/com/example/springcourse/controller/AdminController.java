@@ -1,8 +1,11 @@
 package com.example.springcourse.controller;
 
+import com.example.springcourse.dto.book.AllBookResponse;
 import com.example.springcourse.dto.book.BookRequest;
+import com.example.springcourse.dto.book.BookSearchRequest;
+import com.example.springcourse.dto.page.PageResponse;
+import com.example.springcourse.entity.TypeSearch;
 import com.example.springcourse.service.BookService;
-import com.example.springcourse.service.ReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,7 +19,6 @@ import java.util.UUID;
 @RequestMapping("api/admin")
 public class AdminController {
 
-    private final ReviewService reviewService;
     private final BookService bookService;
 
 
@@ -29,8 +31,17 @@ public class AdminController {
     @CrossOrigin
     @PostMapping("/book")
     public ResponseEntity<?> createBook(@RequestBody @Valid BookRequest bookRequest) {
-      bookService.saveBook(bookRequest);
-      return new ResponseEntity<>(HttpStatus.CREATED);
+        bookService.saveBook(bookRequest);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/books")
+    public PageResponse<AllBookResponse> getAllBook(@RequestParam("searchValue") String searchValue,
+                                                    @RequestParam("typeSearch") TypeSearch typeSearch,
+                                                    @RequestParam() int pageNumber,
+                                                    @RequestParam() int pageSize) {
+        BookSearchRequest request = new BookSearchRequest(searchValue, typeSearch);
+        return bookService.getBooksForAdmin(request, pageNumber, pageSize);
     }
 
 
