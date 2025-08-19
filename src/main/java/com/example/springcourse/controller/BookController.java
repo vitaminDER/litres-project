@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.example.springcourse.dto.page.PageDto;
+import com.example.springcourse.dto.page.PageResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -32,18 +32,12 @@ public class BookController {
 
     @CrossOrigin
     @GetMapping("/review")
-    public ResponseEntity<PageDto<ReviewBookResponse>>findReviewByBook(@RequestParam("bookId") UUID bookId,
-                                                                       @RequestParam() int pageNumber,
-                                                                       @RequestParam() int pageSize) {
+    public ResponseEntity<PageResponse<ReviewBookResponse>>findReviewByBook(@RequestParam("bookId") UUID bookId,
+                                                                            @RequestParam() int pageNumber,
+                                                                            @RequestParam() int pageSize) {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewByBook(bookId,pageNumber,pageSize));
     }
 
-//    @CrossOrigin
-//    @GetMapping("/reviewOnBook")
-//    public ResponseEntity<List<ReviewBook>> findReviewOnBookByTitleAndEvaluation(@RequestParam("title") String title,
-//                                                                                 @RequestParam("evaluation") Integer evaluation) {
-//        return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewWithEvaluation(title, evaluation));
-//    }
 
     @CrossOrigin
     @GetMapping("/genre")

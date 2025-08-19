@@ -42,6 +42,9 @@ public class Book {
     @Column(name = "image")
     private String image;
 
+    @Column(name = "isbn")
+    private String isbn;
+
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "book_genre",

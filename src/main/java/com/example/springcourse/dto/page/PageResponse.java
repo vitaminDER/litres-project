@@ -9,9 +9,10 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PageDto<T> {
+public class PageResponse<T> {
     List<T> content;
     private int pageNumber;
     private int pageSize;
     private int totalPages;
+
 }

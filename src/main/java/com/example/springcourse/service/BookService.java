@@ -1,8 +1,10 @@
 package com.example.springcourse.service;
 
-import com.example.springcourse.dto.book.BookResponse;
-import com.example.springcourse.dto.book.BookRequest;
 import com.example.springcourse.dto.book.AllBookResponse;
+import com.example.springcourse.dto.book.BookRequest;
+import com.example.springcourse.dto.book.BookResponse;
+import com.example.springcourse.dto.book.BookSearchRequest;
+import com.example.springcourse.dto.page.PageResponse;
 import com.example.springcourse.dto.review.response.ReviewBookResponse;
 import com.example.springcourse.entity.Book;
 import com.example.springcourse.entity.Person;
@@ -22,7 +24,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import com.example.springcourse.dto.page.PageDto;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
@@ -60,7 +61,6 @@ public class BookService {
     }
 
 
-
     public BookRequest convertBookToDto(Book book) {
         var dto = new BookRequest();
         dto.setTitle(book.getTitle());
@@ -93,8 +93,8 @@ public class BookService {
     public BookResponse findBook(UUID id) {
 
         Book book = bookRepository.findBookById(id);
-        if(book == null) {
-            throw new BookNotFoundException("Book with id"+ id +" not found");
+        if (book == null) {
+            throw new BookNotFoundException("Book with id" + id + " not found");
         }
 
         averageRatingBook(id);
@@ -108,44 +108,52 @@ public class BookService {
     }
 
     @Transactional
-    public PageDto<ReviewBookResponse> findReviewByBook(UUID bookId, int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+    public PageResponse<ReviewBookResponse> findReviewByBook(UUID bookId, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
         Page<Review> pageReviews = reviewRepository.findAllReviewsByBook(bookId, pageable);
         if (!bookRepository.existsById(bookId)) {
             throw new BookNotFoundException("Book with id " + bookId + " not found");
         }
-        return new PageDto<>(
+        return new PageResponse<>(
                 pageReviews.getContent().stream()
                         .map(this::convertToReviewBookResponse)
                         .collect(Collectors.toList()),
-                pageReviews.getNumber()+1,
+                pageReviews.getNumber() + 1,
                 pageReviews.getSize(),
                 pageReviews.getTotalPages()
         );
     }
 
-//    @Transactional
-//    public List<ReviewBook> findReviewWithEvaluation(String title, Integer evaluation) {
-//        List<String> errors = new ArrayList<>();
-//        if (title == null || title.isBlank()) {
-//            errors.add("Title can't be blank!");
-//        }
-//        if (evaluation > 5 || evaluation < 1) {
-//            errors.add("Evaluation with " + evaluation + " need be more 0 and less 5");
-//        }
-//        if (!errors.isEmpty()) {
-//            throw new BookValidationException("Error validation", errors);
-//        }
-//        return bookRepository.findReviewOnBookWithEvaluation(title, evaluation).stream()
-//                .map(this::convertToReviewBookDto)
-//                .collect(Collectors.toList());
-//    }
+    public PageResponse<AllBookResponse> getBooksForAdmin(BookSearchRequest searchRequest,
+                                                          int pageNumber, int pageSize) {
+
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+
+        Page<Book> pageBooks;
+
+        if (!StringUtils.hasText(searchRequest.getSearchValue())) {
+            pageBooks = bookRepository.findAll(pageable);
+        } else {
+            pageBooks = bookRepository.searchBooks(searchRequest.getSearchValue(),
+                    searchRequest.getTypeSearch().name(), pageable);
+
+        }
+        return new PageResponse<>(
+                pageBooks.getContent().stream()
+                        .map(book -> modelMapper.map(book, AllBookResponse.class))
+                        .collect(Collectors.toList()),
+                pageBooks.getNumber() + 1,
+                pageBooks.getSize(),
+                pageBooks.getTotalPages()
+        );
+    }
 
     public List<AllBookResponse> showAllBooks(Book book) {
         return bookRepository.findAll(book).stream()
                 .map(book1 -> modelMapper.map(book1, AllBookResponse.class))
                 .collect(Collectors.toList());
     }
+
 
     public List<BookRequest> findBookByGenre(String genre) {
         return bookRepository.findBooksByGenre(genre)
