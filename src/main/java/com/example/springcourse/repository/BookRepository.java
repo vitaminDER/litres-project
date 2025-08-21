@@ -20,6 +20,8 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
 
     @Query("select bk from Book bk where bk.id = :id")
     Book findBookById(@Param("id") UUID id);
+    @Query("select bk from Book bk where bk.id = :bookId")
+    Book findBookInfoByIdForAdmin(@Param("bookId") UUID bookId);
 
     @Query("select bk from Book bk where bk.title = :title")
     Book findBookByTitle(@Param("title") String title);

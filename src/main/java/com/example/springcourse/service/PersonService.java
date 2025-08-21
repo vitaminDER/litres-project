@@ -25,23 +25,6 @@ public class PersonService {
     private final ModelMapper modelMapper;
     private final RoleRepository roleRepository;
 
-    public PersonDto savePerson(PersonDto personDto) {
-
-        if (personDto == null) {
-            log.info("Attempt to save null person");
-            throw new IllegalArgumentException("Person can't be NULL!");
-        }
-//        if (personDto.getAge() < 0) {
-//            log.info("Attempt to save person with negative age: {}", personDto.getAge());
-//            throw new IllegalArgumentException("Person age can't be less 0");
-//        }
-
-        Person person = modelMapper.map(personDto, Person.class);
-        Person savedPerson = personRepository.save(person);
-        log.info("Person saved successfully with ID: {}", savedPerson.getId());
-
-        return toDto(savedPerson);
-    }
 
     public PersonDto updatePerson(UUID id, PersonDto personDto) {
 
