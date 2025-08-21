@@ -2,6 +2,7 @@ package com.example.springcourse.controller;
 
 import com.example.springcourse.dto.book.AllBookResponse;
 import com.example.springcourse.dto.book.BookRequest;
+import com.example.springcourse.dto.book.BookResponse;
 import com.example.springcourse.dto.book.BookSearchRequest;
 import com.example.springcourse.dto.page.PageResponse;
 import com.example.springcourse.entity.TypeSearch;
@@ -35,13 +36,18 @@ public class AdminController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/books")
+    @GetMapping("/book")
     public PageResponse<AllBookResponse> getAllBook(@RequestParam("searchValue") String searchValue,
                                                     @RequestParam("typeSearch") TypeSearch typeSearch,
                                                     @RequestParam() int pageNumber,
                                                     @RequestParam() int pageSize) {
         BookSearchRequest request = new BookSearchRequest(searchValue, typeSearch);
         return bookService.getBooksForAdmin(request, pageNumber, pageSize);
+    }
+
+    @GetMapping("/book/info/{bookId}")
+    public ResponseEntity<?> findBookInfo(@PathVariable UUID bookId) {
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.findBookInfoForAdmin(bookId));
     }
 
 

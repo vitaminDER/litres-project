@@ -23,11 +23,6 @@ public class PersonController {
     private final PersonService personService;
 
 
-    @PostMapping()
-    public ResponseEntity<PersonDto> createPerson(@RequestBody @Valid PersonDto personDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(personService.savePerson(personDto));
-    }
-
     @GetMapping("/info/{id}")
     public ResponseEntity<PersonDtoRead> findPersonInfo(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(personService.getPersonInfo(id));

@@ -1,9 +1,6 @@
 package com.example.springcourse.service;
 
-import com.example.springcourse.dto.book.AllBookResponse;
-import com.example.springcourse.dto.book.BookRequest;
-import com.example.springcourse.dto.book.BookResponse;
-import com.example.springcourse.dto.book.BookSearchRequest;
+import com.example.springcourse.dto.book.*;
 import com.example.springcourse.dto.page.PageResponse;
 import com.example.springcourse.dto.review.response.ReviewBookResponse;
 import com.example.springcourse.entity.Book;
@@ -122,6 +119,23 @@ public class BookService {
                 pageReviews.getSize(),
                 pageReviews.getTotalPages()
         );
+    }
+    @Transactional
+    public AdminBookInfoResponse findBookInfoForAdmin(UUID bookId) {
+
+        Book book = bookRepository.findBookInfoByIdForAdmin(bookId);
+        if (book == null) {
+            throw new BookNotFoundException("Book with id" + bookId + " not found");
+        }
+
+        averageRatingBook(bookId);
+
+        AdminBookInfoResponse response = modelMapper.map(book, AdminBookInfoResponse.class);
+        response.setGenres(book.getGenre().stream()
+                .map(genre -> modelMapper.map(genre, Genre.class))
+                .collect(Collectors.toList()));
+
+        return response;
     }
 
     public PageResponse<AllBookResponse> getBooksForAdmin(BookSearchRequest searchRequest,

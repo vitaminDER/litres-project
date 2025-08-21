@@ -38,19 +38,6 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewByBook(bookId,pageNumber,pageSize));
     }
 
-
-    @CrossOrigin
-    @GetMapping("/genre")
-    public ResponseEntity<List<BookRequest>> findBookByGenre(@RequestParam("genre") String genre) {
-        return ResponseEntity.status(HttpStatus.OK).body(bookService.findBookByGenre(genre));
-    }
-
-    @GetMapping("/title")
-    public ResponseEntity<BookRequest> findBookByTitle(@RequestParam("title") String title) {
-        return ResponseEntity.status(HttpStatus.OK).body(bookService.findBookByTitle(title));
-    }
-
-
     @CrossOrigin
     @PutMapping("/{id}")
     public ResponseEntity<BookResponse> updateBook(@PathVariable UUID id,
