@@ -20,6 +20,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -42,24 +44,24 @@ public class BookService {
     private final PersonRepository personRepository;
 
 
-    public void saveBook(BookRequest bookRequest) {
-        List<Genre> genres = genreRepository.findAllById(bookRequest.getGenreId());
+    public void saveBook(BookCreateRequest bookCreateRequest) {
+        List<Genre> genres = genreRepository.findAllById(bookCreateRequest.getGenreId());
 
         var book = new Book();
-        book.setTitle(bookRequest.getTitle());
-        book.setAuthor(bookRequest.getAuthor());
-        book.setYear(bookRequest.getYear());
-        book.setDescription(bookRequest.getDescription());
+        book.setTitle(bookCreateRequest.getTitle());
+        book.setAuthor(bookCreateRequest.getAuthor());
+        book.setYear(bookCreateRequest.getYear());
+        book.setDescription(bookCreateRequest.getDescription());
         book.setGenre(new ArrayList<>(genres));
-        book.setImage(bookRequest.getImage());
+        book.setImage(bookCreateRequest.getImage());
 
         Book savedBook = bookRepository.save(book);
         log.info("Book saved successfully with ID: {}", savedBook.getId());
     }
 
 
-    public BookRequest convertBookToDto(Book book) {
-        var dto = new BookRequest();
+    public BookCreateRequest convertBookToDto(Book book) {
+        var dto = new BookCreateRequest();
         dto.setTitle(book.getTitle());
         dto.setAuthor(book.getAuthor());
         dto.setYear(book.getYear());
@@ -71,19 +73,28 @@ public class BookService {
         return dto;
     }
 
-    public BookResponse updateBook(UUID id, BookResponse bookDto) {
-        Book book = bookRepository.findBookById(id);
+    @Transactional
+    public void updateBook(BookUpdateRequest updateRequest) {
+
+        UUID bookId = updateRequest.getBookId();
+        Book book = bookRepository.findBookInfoByIdForAdmin(bookId);
         if (book == null) {
             throw new IllegalArgumentException("Book can't be null");
         }
-        if (!bookRepository.existsById(id)) {
-            throw new BookNotFoundException("Book with id " + id + " not found");
-        }
-        modelMapper.map(bookDto, book);
+
+        List<Genre> genres = genreRepository.findAllById(updateRequest.getGenresId());
+
+        book.setTitle(updateRequest.getBookTitle());
+        book.setAuthor(updateRequest.getBookAuthor());
+        book.setYear(updateRequest.getBookYear());
+        book.setDescription(updateRequest.getBookDescription());
+        book.setImage(updateRequest.getBookImage());
+        book.setIsbn(updateRequest.getIsbn());
+        book.getGenre().clear();
+        book.getGenre().addAll(genres);
 
         Book updatedBook = bookRepository.save(book);
-
-        return modelMapper.map(updatedBook, BookResponse.class);
+        ResponseEntity.status(HttpStatus.OK).body(updatedBook);
     }
 
     @Transactional
@@ -120,6 +131,7 @@ public class BookService {
                 pageReviews.getTotalPages()
         );
     }
+
     @Transactional
     public AdminBookInfoResponse findBookInfoForAdmin(UUID bookId) {
 
@@ -169,14 +181,14 @@ public class BookService {
     }
 
 
-    public List<BookRequest> findBookByGenre(String genre) {
+    public List<BookCreateRequest> findBookByGenre(String genre) {
         return bookRepository.findBooksByGenre(genre)
                 .stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
-    public BookRequest findBookByTitle(String title) {
+    public BookCreateRequest findBookByTitle(String title) {
         Book book = bookRepository.findBookByTitle(title);
         return toDto(book);
     }
@@ -213,8 +225,8 @@ public class BookService {
     }
 
 
-    BookRequest toDto(Book book) {
-        return modelMapper.map(book, BookRequest.class);
+    BookCreateRequest toDto(Book book) {
+        return modelMapper.map(book, BookCreateRequest.class);
     }
 
 }

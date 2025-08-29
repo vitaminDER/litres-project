@@ -1,7 +1,6 @@
 package com.example.springcourse.controller;
 
 import com.example.springcourse.dto.book.BookResponse;
-import com.example.springcourse.dto.book.BookRequest;
 import com.example.springcourse.dto.book.AllBookResponse;
 import com.example.springcourse.dto.review.response.ReviewBookResponse;
 import com.example.springcourse.entity.Book;
@@ -38,12 +37,12 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewByBook(bookId,pageNumber,pageSize));
     }
 
-    @CrossOrigin
-    @PutMapping("/{id}")
-    public ResponseEntity<BookResponse> updateBook(@PathVariable UUID id,
-                                                   @RequestBody BookResponse bookResponse) {
-        return ResponseEntity.status(HttpStatus.OK).body(bookService.updateBook(id, bookResponse));
-    }
+//    @CrossOrigin
+//    @PutMapping("/{id}")
+//    public ResponseEntity<BookResponse> updateBook(@PathVariable UUID id,
+//                                                   @RequestBody BookResponse bookResponse) {
+//        return ResponseEntity.status(HttpStatus.OK).body(bookService.updateBook(id, bookResponse));
+//    }
 
 
 
