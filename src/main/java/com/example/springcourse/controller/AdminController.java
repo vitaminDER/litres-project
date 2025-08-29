@@ -1,9 +1,9 @@
 package com.example.springcourse.controller;
 
 import com.example.springcourse.dto.book.AllBookResponse;
-import com.example.springcourse.dto.book.BookRequest;
-import com.example.springcourse.dto.book.BookResponse;
+import com.example.springcourse.dto.book.BookCreateRequest;
 import com.example.springcourse.dto.book.BookSearchRequest;
+import com.example.springcourse.dto.book.BookUpdateRequest;
 import com.example.springcourse.dto.page.PageResponse;
 import com.example.springcourse.entity.TypeSearch;
 import com.example.springcourse.service.BookService;
@@ -31,8 +31,8 @@ public class AdminController {
 
     @CrossOrigin
     @PostMapping("/book")
-    public ResponseEntity<?> createBook(@RequestBody @Valid BookRequest bookRequest) {
-        bookService.saveBook(bookRequest);
+    public ResponseEntity<?> createBook(@RequestBody @Valid BookCreateRequest bookCreateRequest) {
+        bookService.saveBook(bookCreateRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -48,6 +48,11 @@ public class AdminController {
     @GetMapping("/book/info/{bookId}")
     public ResponseEntity<?> findBookInfo(@PathVariable UUID bookId) {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.findBookInfoForAdmin(bookId));
+    }
+
+    @PutMapping("/book")
+    public void updateBook(@RequestBody BookUpdateRequest updateRequest) {
+       bookService.updateBook(updateRequest);
     }
 
 
