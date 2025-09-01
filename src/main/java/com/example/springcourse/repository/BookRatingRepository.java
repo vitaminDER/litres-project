@@ -12,8 +12,8 @@ import java.util.UUID;
 @Repository
 public interface BookRatingRepository extends JpaRepository<BookRating, UUID> {
 
-    @Query("select rat from BookRating rat join rat.book bk join bk.person per" +
-            " where bk.id = :bookId and per.id = :personId")
-    Optional<BookRating> findRatingBookByPerson(@Param("bookId")UUID bookId, @Param("personId") UUID personId);
+    @Query("select br from BookRating br where br.book.id= :bookId and br.person.id = :personId")
+    Optional<BookRating> findRatingBookByPerson(@Param("bookId")UUID bookId,
+                                                @Param("personId") UUID personId);
 
 }
