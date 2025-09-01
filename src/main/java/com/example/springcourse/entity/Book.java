@@ -66,11 +66,5 @@ public class Book {
     @JsonIgnore
     List<Person> person;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "book_rating",
-    joinColumns = @JoinColumn(name = "book_id"),
-    inverseJoinColumns = @JoinColumn(name = "person_id"))
-    List<BookRating> bookRating;
-
 
 }

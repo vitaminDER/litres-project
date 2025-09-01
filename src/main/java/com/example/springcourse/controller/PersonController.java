@@ -1,8 +1,10 @@
 package com.example.springcourse.controller;
 
+import com.example.springcourse.dto.book.BookRatingRequest;
 import com.example.springcourse.dto.person.*;
 import com.example.springcourse.dto.review.ReviewPersonDto;
 import com.example.springcourse.entity.Person;
+import com.example.springcourse.service.BookService;
 import com.example.springcourse.service.PersonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import java.util.UUID;
 public class PersonController {
 
     private final PersonService personService;
+    private final BookService bookService;
 
 
     @GetMapping("/info/{id}")
@@ -31,6 +34,12 @@ public class PersonController {
     @GetMapping("/review/{id}")
     public ResponseEntity<List<ReviewPersonDto>> findPersonReview(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(personService.getReviewPerson(id));
+    }
+
+    @PostMapping()
+    public ResponseEntity<?> makeRatingOnBook(@RequestBody @Valid BookRatingRequest bookRatingRequest) {
+        bookService.makeRatingBookByPerson(bookRatingRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

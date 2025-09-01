@@ -3,15 +3,11 @@ package com.example.springcourse.service;
 import com.example.springcourse.dto.book.*;
 import com.example.springcourse.dto.page.PageResponse;
 import com.example.springcourse.dto.review.response.ReviewBookResponse;
-import com.example.springcourse.entity.Book;
-import com.example.springcourse.entity.Person;
-import com.example.springcourse.entity.Review;
+import com.example.springcourse.entity.*;
 import com.example.springcourse.entity.genre.Genre;
 import com.example.springcourse.exception.BookNotFoundException;
-import com.example.springcourse.repository.BookRepository;
-import com.example.springcourse.repository.GenreRepository;
-import com.example.springcourse.repository.PersonRepository;
-import com.example.springcourse.repository.ReviewRepository;
+import com.example.springcourse.exception.PersonNotFoundException;
+import com.example.springcourse.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +38,7 @@ public class BookService {
     private final ModelMapper modelMapper;
     private final GenreRepository genreRepository;
     private final PersonRepository personRepository;
+    private final BookRatingRepository bookRatingRepository;
 
 
     public void saveBook(BookCreateRequest bookCreateRequest) {
@@ -199,6 +196,38 @@ public class BookService {
             throw new EntityNotFoundException("Запись с ID " + id + " не найдена");
         }
         this.bookRepository.deleteById(id);
+    }
+
+    public void makeRatingBookByPerson(BookRatingRequest ratingRequest) {
+
+        UUID bookId = ratingRequest.getBookId();
+        UUID personId = ratingRequest.getPersonId();
+
+        var book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new BookNotFoundException("Book not found"));
+
+        var person = personRepository.findById(personId)
+                .orElseThrow(() -> new PersonNotFoundException("Person not found"));
+
+        var bookRating = bookRatingRepository.findRatingBookByPerson(bookId, personId)
+                .orElse(null);
+
+        if(bookRating != null) {
+            bookRating.setBookRating(ratingRequest.getBookRating());
+            bookRatingRepository.save(bookRating);
+        } else {
+            var key = new BookRatingKey();
+            key.setBookId(bookId);
+            key.setPersonId(personId);
+
+            var newRating = new BookRating();
+            newRating.setId(key);
+            newRating.setBook(book);
+            newRating.setPerson(person);
+            newRating.setBookRating(ratingRequest.getBookRating());
+            bookRatingRepository.save(newRating);
+        }
+        averageRatingBook(bookId);
     }
 
     public void averageRatingBook(UUID id) {

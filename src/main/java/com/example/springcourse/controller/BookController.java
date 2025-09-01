@@ -37,14 +37,6 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewByBook(bookId,pageNumber,pageSize));
     }
 
-//    @CrossOrigin
-//    @PutMapping("/{id}")
-//    public ResponseEntity<BookResponse> updateBook(@PathVariable UUID id,
-//                                                   @RequestBody BookResponse bookResponse) {
-//        return ResponseEntity.status(HttpStatus.OK).body(bookService.updateBook(id, bookResponse));
-//    }
-
-
 
     @CrossOrigin
     @GetMapping()
