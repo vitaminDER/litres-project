@@ -14,18 +14,25 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class BookRating {
+public class BookRating  {
 
-    @Id
-    @Column(name = "book_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
+    @EmbeddedId
+    private BookRatingKey id;
+
 
     @Column(name = "rating")
     private int bookRating;
 
-    @ManyToMany(mappedBy = "bookRating", fetch = FetchType.LAZY)
-    List<Book> book;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("bookId")
+    @JoinColumn(name = "book_id")
+    private Book book;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("personId")
+    @JoinColumn(name = "person_id")
+    private Person person;
+
 
 }
 
