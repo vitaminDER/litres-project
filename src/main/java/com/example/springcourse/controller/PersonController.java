@@ -1,6 +1,7 @@
 package com.example.springcourse.controller;
 
-import com.example.springcourse.dto.book.BookRatingRequest;
+import com.example.springcourse.dto.book.request.BookRatingRequest;
+import com.example.springcourse.dto.book.request.FavouriteBookRequest;
 import com.example.springcourse.dto.person.*;
 import com.example.springcourse.dto.review.ReviewPersonDto;
 import com.example.springcourse.entity.Person;
@@ -39,6 +40,12 @@ public class PersonController {
     @PostMapping()
     public ResponseEntity<?> makeRatingOnBook(@RequestBody @Valid BookRatingRequest bookRatingRequest) {
         bookService.makeRatingBookByPerson(bookRatingRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/favourite")
+    public ResponseEntity<?> addFavouriteBooks(@RequestBody FavouriteBookRequest favouriteBookRequest) {
+        personService.addFavouriteBookByPerson(favouriteBookRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

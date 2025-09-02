@@ -1,4 +1,4 @@
-package com.example.springcourse.dto.book;
+package com.example.springcourse.dto.book.response;
 
 import com.example.springcourse.entity.genre.Genre;
 import lombok.AllArgsConstructor;

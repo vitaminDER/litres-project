@@ -1,7 +1,7 @@
 package com.example.springcourse.controller;
 
-import com.example.springcourse.dto.book.BookResponse;
-import com.example.springcourse.dto.book.AllBookResponse;
+import com.example.springcourse.dto.book.response.BookResponse;
+import com.example.springcourse.dto.book.response.AllBookResponse;
 import com.example.springcourse.dto.review.response.ReviewBookResponse;
 import com.example.springcourse.entity.Book;
 import com.example.springcourse.service.BookService;

@@ -1,4 +1,4 @@
-package com.example.springcourse.entity;
+package com.example.springcourse.entity.bookRating;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

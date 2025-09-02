@@ -1,9 +1,17 @@
 package com.example.springcourse.service;
 
-import com.example.springcourse.dto.book.*;
+import com.example.springcourse.dto.book.request.BookCreateRequest;
+import com.example.springcourse.dto.book.request.BookRatingRequest;
+import com.example.springcourse.dto.book.request.BookSearchRequest;
+import com.example.springcourse.dto.book.request.BookUpdateRequest;
+import com.example.springcourse.dto.book.response.AdminBookInfoResponse;
+import com.example.springcourse.dto.book.response.AllBookResponse;
+import com.example.springcourse.dto.book.response.BookResponse;
 import com.example.springcourse.dto.page.PageResponse;
 import com.example.springcourse.dto.review.response.ReviewBookResponse;
 import com.example.springcourse.entity.*;
+import com.example.springcourse.entity.bookRating.BookRating;
+import com.example.springcourse.entity.bookRating.BookRatingKey;
 import com.example.springcourse.entity.genre.Genre;
 import com.example.springcourse.exception.BookNotFoundException;
 import com.example.springcourse.exception.PersonNotFoundException;
