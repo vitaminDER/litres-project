@@ -1,10 +1,17 @@
 package com.example.springcourse.service;
 
+import com.example.springcourse.dto.book.request.FavouriteBookRequest;
 import com.example.springcourse.dto.person.*;
 import com.example.springcourse.dto.review.ReviewPersonDto;
 import com.example.springcourse.entity.Person;
 import com.example.springcourse.entity.Review;
+import com.example.springcourse.entity.favouriteBook.FavouriteBook;
+import com.example.springcourse.entity.favouriteBook.FavouriteBookKey;
+import com.example.springcourse.exception.BookNotFoundException;
+import com.example.springcourse.exception.FavouriteBookExistsException;
 import com.example.springcourse.exception.PersonNotFoundException;
+import com.example.springcourse.repository.BookRepository;
+import com.example.springcourse.repository.FavouriteBookRepository;
 import com.example.springcourse.repository.PersonRepository;
 import com.example.springcourse.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +31,8 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final ModelMapper modelMapper;
     private final RoleRepository roleRepository;
+    private final BookRepository bookRepository;
+    private final FavouriteBookRepository favouriteBookRepository;
 
 
     public PersonDto updatePerson(UUID id, PersonDto personDto) {
@@ -41,6 +50,36 @@ public class PersonService {
         modelMapper.map(personDto, person);
         Person updatedPerson = personRepository.save(person);
         return modelMapper.map(updatedPerson, PersonDto.class);
+    }
+
+    public void addFavouriteBookByPerson(FavouriteBookRequest favouriteBookRequest) {
+
+        UUID bookId = favouriteBookRequest.getBookId();
+        UUID personId = favouriteBookRequest.getPersonId();
+
+        var book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new BookNotFoundException("Book not found!"));
+
+        var person = personRepository.findById(personId)
+                .orElseThrow(() -> new PersonNotFoundException("Person not found!"));
+
+        var favouriteBook = favouriteBookRepository.findByBookIdAndPersonId(bookId, personId)
+                .orElse(null);
+
+        if (favouriteBook != null) {
+            throw new FavouriteBookExistsException("Book is already in favourites!");
+        } else {
+
+            var key = new FavouriteBookKey();
+            key.setBookId(bookId);
+            key.setPersonId(personId);
+
+            var newFavouriteBook = new FavouriteBook();
+            newFavouriteBook.setId(key);
+            newFavouriteBook.setBook(book);
+            newFavouriteBook.setPerson(person);
+            favouriteBookRepository.save(newFavouriteBook);
+        }
     }
 
     public List<PersonDtoRead> showAllPerson(Person person) {

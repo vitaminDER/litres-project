@@ -1,4 +1,4 @@
-package com.example.springcourse.dto.book;
+package com.example.springcourse.dto.book.request;
 
 import com.example.springcourse.entity.TypeSearch;
 import lombok.AllArgsConstructor;

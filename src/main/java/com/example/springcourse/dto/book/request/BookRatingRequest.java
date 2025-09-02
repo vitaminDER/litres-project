@@ -1,4 +1,4 @@
-package com.example.springcourse.dto.book;
+package com.example.springcourse.dto.book.request;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

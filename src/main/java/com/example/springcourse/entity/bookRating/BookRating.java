@@ -1,13 +1,11 @@
-package com.example.springcourse.entity;
+package com.example.springcourse.entity.bookRating;
 
+import com.example.springcourse.entity.Book;
+import com.example.springcourse.entity.Person;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-
-import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name = "book_rating")

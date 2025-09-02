@@ -1,9 +1,9 @@
 package com.example.springcourse.controller;
 
-import com.example.springcourse.dto.book.AllBookResponse;
-import com.example.springcourse.dto.book.BookCreateRequest;
-import com.example.springcourse.dto.book.BookSearchRequest;
-import com.example.springcourse.dto.book.BookUpdateRequest;
+import com.example.springcourse.dto.book.response.AllBookResponse;
+import com.example.springcourse.dto.book.request.BookCreateRequest;
+import com.example.springcourse.dto.book.request.BookSearchRequest;
+import com.example.springcourse.dto.book.request.BookUpdateRequest;
 import com.example.springcourse.dto.page.PageResponse;
 import com.example.springcourse.entity.TypeSearch;
 import com.example.springcourse.service.BookService;
