@@ -5,20 +5,21 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class PersonDtoRead {
 
-    private int id;
+    private UUID id;
     @NotBlank
     private String firstName;
 
     @NotBlank
     private String lastName;
 
-    @Min(value = 1)
-    private int age;
+    private String birthDate;
 
     @Email(message = "Invalid email format")
     private String email;

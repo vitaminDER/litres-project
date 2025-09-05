@@ -20,8 +20,7 @@ public class PersonDto {
     @NotNull
      private String lastName;
 
-    @Min(value = 1)
-     private int age;
+     private String birthDate;
 
     @Email(message = "Invalid email format")
     @NotBlank

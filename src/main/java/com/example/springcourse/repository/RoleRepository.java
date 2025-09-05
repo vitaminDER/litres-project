@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface RoleRepository extends JpaRepository<Role, Integer> {
-//    @Query("select role from Role role join fetch role.personRoles where role.personRoles = :name")
+public interface RoleRepository extends JpaRepository<Role, UUID> {
     Optional<Role> findByName(String name);
 }

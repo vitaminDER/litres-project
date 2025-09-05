@@ -1,20 +1,19 @@
 package com.example.springcourse.controller;
 
-import com.example.springcourse.dto.book.BookCreateDto;
-import com.example.springcourse.dto.book.BookDto;
-import com.example.springcourse.dto.book.BookReadDto;
-import com.example.springcourse.dto.review.ReviewBook;
+import com.example.springcourse.dto.book.response.BookResponse;
+import com.example.springcourse.dto.book.response.AllBookResponse;
+import com.example.springcourse.dto.review.response.ReviewBookResponse;
 import com.example.springcourse.entity.Book;
 import com.example.springcourse.service.BookService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.example.springcourse.dto.page.PageDto;
+import com.example.springcourse.dto.page.PageResponse;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,60 +25,22 @@ public class BookController {
 
     @CrossOrigin
     @GetMapping("/info")
-    public ResponseEntity<BookDto> findBookInfo(@RequestParam("id") Integer id) {
+    public ResponseEntity<BookResponse> findBookInfo(@RequestParam("id") UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.findBook(id));
     }
 
     @CrossOrigin
     @GetMapping("/review")
-    public ResponseEntity<PageDto<ReviewBook>>findReviewByBook(@RequestParam("bookId") Integer bookId,
-                                                               @RequestParam() int pageNumber,
-                                                               @RequestParam() int pageSize) {
+    public ResponseEntity<PageResponse<ReviewBookResponse>>findReviewByBook(@RequestParam("bookId") UUID bookId,
+                                                                            @RequestParam() int pageNumber,
+                                                                            @RequestParam() int pageSize) {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewByBook(bookId,pageNumber,pageSize));
     }
 
-    @CrossOrigin
-    @GetMapping("/reviewOnBook")
-    public ResponseEntity<List<ReviewBook>> findReviewOnBookByTitleAndEvaluation(@RequestParam("title") String title,
-                                                                                 @RequestParam("evaluation") Integer evaluation) {
-        return ResponseEntity.status(HttpStatus.OK).body(bookService.findReviewWithEvaluation(title, evaluation));
-    }
-
-    @CrossOrigin
-    @GetMapping("/genre")
-    public ResponseEntity<List<BookDto>> findBookByGenre(@RequestParam("genre") String genre) {
-        return ResponseEntity.status(HttpStatus.OK).body(bookService.findBookByGenre(genre));
-    }
-
-    @GetMapping("/title")
-    public ResponseEntity<BookDto> findBookByTitle(@RequestParam("title") String title) {
-        return ResponseEntity.status(HttpStatus.OK).body(bookService.findBookByTitle(title));
-    }
-
-
-    @CrossOrigin
-    @PutMapping("/{id}")
-    public ResponseEntity<BookCreateDto> updateBook(@PathVariable Integer id,
-                                                    @RequestBody BookCreateDto bookCreateDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(bookService.updateBook(id, bookCreateDto));
-    }
-
-    @CrossOrigin
-    @DeleteMapping("/{id}")
-    public void deleteBook(@PathVariable Integer id) {
-        this.bookService.deleteBook(id);
-    }
-
-
-    @CrossOrigin
-    @PostMapping()
-    public ResponseEntity<BookCreateDto> createBook(@RequestBody @Valid BookDto bookDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.saveBook(bookDTO));
-    }
 
     @CrossOrigin
     @GetMapping()
-    public List<BookReadDto> getAllBook(Book books) {
+    public List<AllBookResponse> getAllBook(Book books) {
         return bookService.showAllBooks(books);
     }
 

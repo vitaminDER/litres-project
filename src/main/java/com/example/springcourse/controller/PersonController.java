@@ -1,8 +1,11 @@
 package com.example.springcourse.controller;
 
+import com.example.springcourse.dto.book.request.BookRatingRequest;
+import com.example.springcourse.dto.book.request.FavouriteBookRequest;
 import com.example.springcourse.dto.person.*;
 import com.example.springcourse.dto.review.ReviewPersonDto;
 import com.example.springcourse.entity.Person;
+import com.example.springcourse.service.BookService;
 import com.example.springcourse.service.PersonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -20,21 +24,29 @@ import java.util.List;
 public class PersonController {
 
     private final PersonService personService;
+    private final BookService bookService;
 
-
-    @PostMapping()
-    public ResponseEntity<PersonDto> createPerson(@RequestBody @Valid PersonDto personDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(personService.savePerson(personDto));
-    }
 
     @GetMapping("/info/{id}")
-    public ResponseEntity<PersonDtoRead> findPersonInfo(@PathVariable Integer id) {
+    public ResponseEntity<PersonDtoRead> findPersonInfo(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(personService.getPersonInfo(id));
     }
 
     @GetMapping("/review/{id}")
-    public ResponseEntity<List<ReviewPersonDto>> findPersonReview(@PathVariable Integer id) {
+    public ResponseEntity<List<ReviewPersonDto>> findPersonReview(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(personService.getReviewPerson(id));
+    }
+
+    @PostMapping()
+    public ResponseEntity<?> makeRatingOnBook(@RequestBody @Valid BookRatingRequest bookRatingRequest) {
+        bookService.makeRatingBookByPerson(bookRatingRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/favourite")
+    public ResponseEntity<?> addFavouriteBooks(@RequestBody FavouriteBookRequest favouriteBookRequest) {
+        personService.addFavouriteBookByPerson(favouriteBookRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
@@ -44,14 +56,14 @@ public class PersonController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PersonDto> updatePerson(@PathVariable Integer id,
+    public ResponseEntity<PersonDto> updatePerson(@PathVariable UUID id,
                                                   @RequestBody PersonDto personDto) {
         return ResponseEntity.status(HttpStatus.OK).body(personService.updatePerson(id, personDto));
 
     }
 
     @DeleteMapping("{id}")
-    public void deletePerson(@PathVariable Integer id) {
+    public void deletePerson(@PathVariable UUID id) {
         this.personService.deletePerson(id);
     }
 

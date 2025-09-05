@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 @Entity
 @Table(name = "review")
@@ -26,18 +27,14 @@ import java.util.Locale;
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private UUID id;
 
-    @Column(name = "title")
-    private String title;
 
     @Column(name = "comment")
     private String comment;
 
-    @Column(name = "evaluation")
-    private int evaluation;
 
-    @Column(name = "created_date")
+    @Column(name = "date")
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate createdDate;
 
@@ -51,9 +48,9 @@ public class Review {
     @JsonBackReference
     Person person;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", referencedColumnName = "id")
-    @JsonBackReference
+    @JsonBackReference("book-reviews")
     Book book;
 
 }
